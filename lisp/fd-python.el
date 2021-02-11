@@ -1,3 +1,35 @@
+;;; fd-python.el --- My python configuration -*- lexical-binding: t -*-
+
+;; Author: Chris Perivolaropoulos
+;; Maintainer: Chris Perivolaropoulos
+;; Version: 1.0
+;; Package-Requires: (company-jedi python)
+;; Homepage: http://github.com/fakedrake/emacs-straight
+;; Keywords: keywords
+
+
+;; This file is not part of GNU Emacs
+
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; For a full copy of the GNU General Public License
+;; see <http://www.gnu.org/licenses/>.
+
+
+;;; Commentary:
+
+;; Pytho configuration
+
+;;; Code:
+
 (defun python-smart-fill-paragraph (&optional justify region)
   (interactive)
   (if (null (python-info-docstring-p))
@@ -52,4 +84,8 @@
   (advice-add 'python-indent-line-function
               :around #'fd-python-indent-line-function))
 
+
 (provide 'fd-python)
+
+;;; fd-python.el ends here
+

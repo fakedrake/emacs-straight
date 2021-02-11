@@ -3,4 +3,5 @@
   :init
   (when (boundp 'global-auto-complete-mode)
     (setq global-auto-complete-mode -1)))
+
 (provide 'fd-company)

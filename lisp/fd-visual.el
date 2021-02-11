@@ -1,3 +1,37 @@
+;;; fd-visual.el --- Visual settings -*- lexical-binding: t -*-
+
+;; Author: Chris Perivolaropoulos
+;; Maintainer: Chris Perivolaropoulos
+;; Version: 1.0
+;; Package-Requires: (naquadah-theme rainbow-delimiters)
+;; Homepage: http://github.com/fakedrake/emacs-straight
+;; Keywords: visual
+
+
+;; This file is not part of GNU Emacs
+
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; For a full copy of the GNU General Public License
+;; see <http://www.gnu.org/licenses/>.
+
+
+;;; Commentary:
+
+;; Just some visual settings
+
+;;; Code:
+
+(message "Hello World!")
+
 ;; Visual Settings
 (defun fullscreen ()
   "Set the fullscreen."
@@ -41,16 +75,25 @@
                       (buffer-face-set '(:background "#1e2223"))))))
   (buffer-face-set 'default))
 
+(global-set-key (kbd "M-+") #'(lambda nil (interactive) (djcb-zoom 1)))
+(global-set-key (kbd "M--") #'(lambda nil (interactive) (djcb-zoom -2)))
+(line-number-mode 1)	; have line numbers and
+(column-number-mode 1)	; column numbers in the mode line
+(mouse-avoidance-mode 'banish)
+(tool-bar-mode -1)	; no tool bar with icons
+(menu-bar-mode -1)
+(scroll-bar-mode -1)	; no scroll bars
+(add-hook 'find-file-hook (lambda () (setq show-trailing-whitespace t)))
+(global-linum-mode 1)	; add line numbers on the left
+(show-paren-mode t)
+
 
 (use-package naquadah-theme
   :demand t
   :hook '((find-file . add-mode-line-dirtrack)
           (buffer-list-update-hook . highlight-selected-window))
   :config
-  (message "initializing themere")
-  (global-set-key (kbd "M-+") #'(lambda nil (interactive) (djcb-zoom 1)))
-  (global-set-key (kbd "M--") #'(lambda nil (interactive) (djcb-zoom -2)))
-
+  (load-theme 'naquadah)
   (let ((comment "IndianRed2"))
     (custom-theme-set-faces
      'naquadah
@@ -72,25 +115,32 @@
      `(link ((t (:foreground  "#729fcf" :underline t))))
      `(highlight ((t (:background nil :underline t :weight bold))))
      `(highlight-symbol-face ((t (:underline t))))))
-  (setq-default cursor-type 'box)
-  (setq-default
-   frame-title-format
-   (list '((buffer-file-name " %f" (dired-directory
-                                    dired-directory
-                                    (revert-buffer-function " %b"
-                                                            ("%b -
+  (enable-theme 'naquadah)
+  (global-hl-line-mode 1)
+  (message "Enabled theme"))
+(setq-default cursor-type 'box)
+(setq-default
+ frame-title-format
+ (list '((buffer-file-name " %f" (dired-directory
+                                  dired-directory
+                                  (revert-buffer-function " %b"
+                                                          ("%b -
                                                           Dir: "
-                                                             default-directory)))))))
+                                                           default-directory)))))))
 
-  (line-number-mode 1)	; have line numbers and
-  (column-number-mode 1)	; column numbers in the mode line
-  (mouse-avoidance-mode 'banish)
-  (tool-bar-mode -1)	; no tool bar with icons
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1)	; no scroll bars
-  (add-hook 'find-file-hook (lambda () (setq show-trailing-whitespace t)))
-  (global-linum-mode 1)	; add line numbers on the left
-  (show-paren-mode t))
-
+(setq-default mode-line-format
+              '((:eval (fd-mode-line-vc-info))
+                mode-line-front-space
+                mode-line-mule-info
+                mode-line-client
+                mode-line-modified
+                mode-line-remote
+                mode-line-frame-identification
+                mode-line-buffer-identification
+                "  " mode-line-misc-info
+                "  " mode-line-modes
+                mode-line-end-spaces))
 
 (provide 'fd-visual)
+
+;;; fd-visual.el ends here

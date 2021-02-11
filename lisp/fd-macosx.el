@@ -6,6 +6,8 @@
 
 ; Frame and window management:
 (setq special-display-regexps nil)   ; do not open certain buffers in special windows/frames
+(add-to-list 'exec-path "/opt/homebrew/bin")
+(add-to-list 'exec-path "/usr/local/bin")
 
  ;; Editing
 

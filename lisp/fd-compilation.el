@@ -2,6 +2,8 @@
 ;; Stuff related to compilation.
 (require 's)
 (require 'notifications)
+(require 'cl)
+
 (defmacro with-function-args (func-and-args &rest body)
   "FUNC-AND-ARGS is a cons of function symbol and a function that
 accepts the same args as the function corresponding to car but
@@ -78,7 +80,7 @@ returns non-nil if the function is to be called."
         (is-root (or (when (functionp marker) marker)
                      (apply-partially 'fd-file-in-directory-p (or marker ".git")))))
     (car
-     (remove-if 'null
+     (cl-remove-if 'null
                 (mapcdr
                  (lambda (dl)
                    ;; Keep only the dirs that contain a .dir-locals.el
@@ -86,14 +88,12 @@ returns non-nil if the function is to be called."
                      (when (funcall is-root ds)
                        ds))) (nreverse (s-split "/" dir t)))))))
 
-(require 'recur)
-(defun or-exists (&rest paths)
-  (recur-let
-   ((paths paths))
-   (when paths
-     (if (and (car paths) (file-directory-p (car paths)))
-         (car paths)
-       (recur (cdr paths))))))
+(defmacro or-exists (&rest paths)
+  (cons 
+   'or
+   (mapcar 
+    (lambda (p) `(when (and ,p (file-directory-p ,p)) ,p))
+    paths)))
 
 (defun fd-compilation-root (filename)
   (file-name-as-directory

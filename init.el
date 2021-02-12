@@ -24,6 +24,7 @@
 
 (add-to-list 'load-path (concat user-emacs-directory "lisp"))
 (require 'fd-misc)
+(require 'fd-misc-programming)
 (use-package yaml-mode)
 (require 'fd-clipboard)
 (when (eq system-type 'darwin) (require 'fd-macosx))
@@ -32,12 +33,15 @@
 (require 'fd-python)
 
 (straight-use-package
- '(fd-haskell :type git :host github :repo "fakedrake/fd-haskell"))
+ '(fd-haskell :type git :host github :repo "fakedrake/fd-haskell"
+              :files (:defaults "snippets")))
 (require 'fd-haskell)
 (fd-haskell-configure-haskell-mode)
 
+(require 'fd-lisp)
 (require 'fd-coq)
 (require 'fd-company)
+(require 'fd-git)
 (require 'fd-visual)
 
 (custom-set-variables

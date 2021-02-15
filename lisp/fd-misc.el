@@ -18,7 +18,6 @@
 (toggle-input-method)
 (setq scroll-step 1)
 (global-set-key (kbd "C-z") 'revert-buffer)
-(cua-mode -1)
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)

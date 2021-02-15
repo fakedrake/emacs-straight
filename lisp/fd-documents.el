@@ -1,3 +1,8 @@
+ (use-package writegood-mode
+    :bind ("C-c g" . writegood-mode)
+    :config
+    (add-to-list 'writegood-weasel-words "actionable"))
+
 (defun org-count-words (start end)
   "Count words in region skipping code blocks"
   (let ((words 0))

@@ -1,3 +1,7 @@
+(use-package rainbow-delimiters
+  :config
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+
 (add-hook 'before-save-hook 'maybe-delete-whitespace)
 
 (defvar keep-whitespace nil

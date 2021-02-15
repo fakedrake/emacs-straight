@@ -3,7 +3,7 @@
 ;; Author: Chris Perivolaropoulos
 ;; Maintainer: Chris Perivolaropoulos
 ;; Version: 1.0
-;; Package-Requires: (naquadah-theme rainbow-delimiters)
+;; Package-Requires: (naquadah-theme)
 ;; Homepage: http://github.com/fakedrake/emacs-straight
 ;; Keywords: visual
 
@@ -87,13 +87,12 @@
 (global-linum-mode 1)	; add line numbers on the left
 (show-paren-mode t)
 
-
 (use-package naquadah-theme
   :demand t
   :hook '((find-file . add-mode-line-dirtrack)
           (buffer-list-update-hook . highlight-selected-window))
   :config
-  (load-theme 'naquadah)
+  (load-theme 'naquadah t)
   (let ((comment "IndianRed2"))
     (custom-theme-set-faces
      'naquadah

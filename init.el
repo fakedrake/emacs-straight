@@ -1,3 +1,12 @@
+(setq gc-cons-threshold 10000000)
+
+;; Restore after startup
+(add-hook 'after-init-hook
+          (lambda ()
+            (setq gc-cons-threshold 1000000)
+            (message "gc-cons-threshold restored to %S"
+                     gc-cons-threshold)))
+
 (let (file-name-handler-alist)
   (setq user-emacs-directory (file-name-directory load-file-name)))
 
@@ -23,12 +32,15 @@
 (use-package git)
 
 (add-to-list 'load-path (concat user-emacs-directory "lisp"))
+; (require 'fd-benchmark-init)
 (require 'fd-misc)
 (require 'fd-misc-programming)
 (use-package yaml-mode)
 (require 'fd-clipboard)
 (when (eq system-type 'darwin) (require 'fd-macosx))
-(require 'fd-helm)
+; (require 'fd-helm)
+(require 'fd-ivy)
+; (require 'fd-selectrum)
 (require 'fd-compilation)
 (require 'fd-python)
 

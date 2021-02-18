@@ -220,4 +220,4 @@ parent."
                ((reusable-frames . t))))
 
 (electric-indent-mode -1)
-(provide 'fd-misc)
+(savehist-mode 1)

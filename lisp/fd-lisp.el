@@ -15,5 +15,3 @@
   (define-key emacs-lisp-mode-map (kbd "C-M-d") 'edebug-defun))
 
 (add-hook 'emacs-lisp-mode-hook 'fd-elisp-hooks)
-
-(provide 'fd-lisp)

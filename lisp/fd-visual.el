@@ -30,8 +30,6 @@
 
 ;;; Code:
 
-(message "Hello World!")
-
 ;; Visual Settings
 (defun fullscreen ()
   "Set the fullscreen."
@@ -139,7 +137,5 @@
                 "  " mode-line-misc-info
                 "  " mode-line-modes
                 mode-line-end-spaces))
-
-(provide 'fd-visual)
 
 ;;; fd-visual.el ends here

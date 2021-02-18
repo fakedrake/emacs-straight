@@ -35,4 +35,3 @@ each line."
 (setq whitespace-line-column 80)
 (global-whitespace-mode t)
 (setq narrow-to-defun-include-comments t)
-(provide 'fd-misc-programming)

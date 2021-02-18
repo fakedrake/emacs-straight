@@ -20,5 +20,3 @@
 (add-to-list 'auto-mode-alist '("[.]pde" . c++-mode))
 (add-to-list 'auto-mode-alist '("[.]rdf" . html-mode))
 (add-to-list 'auto-mode-alist '("[.]php" . web-mode))
-
-(provide 'fd-automode)

@@ -84,8 +84,4 @@
   (advice-add 'python-indent-line-function
               :around #'fd-python-indent-line-function))
 
-
-(provide 'fd-python)
-
 ;;; fd-python.el ends here
-

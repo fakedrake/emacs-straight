@@ -45,5 +45,3 @@ have <fname>:<linum>"
 	(message (format "Copied '%s'" clip))))))
 
 (global-set-key (kbd "C-x y") 'my-put-file-name-on-clipboard)
-
-(provide 'fd-clipboard)

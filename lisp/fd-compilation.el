@@ -89,9 +89,9 @@ returns non-nil if the function is to be called."
                        ds))) (nreverse (s-split "/" dir t)))))))
 
 (defmacro or-exists (&rest paths)
-  (cons 
+  (cons
    'or
-   (mapcar 
+   (mapcar
     (lambda (p) `(when (and ,p (file-directory-p ,p)) ,p))
     paths)))
 

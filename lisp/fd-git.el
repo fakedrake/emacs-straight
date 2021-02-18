@@ -116,4 +116,3 @@ been modified since its last check-in."
     (concat (propertize (car props) 'face (cadr props))
             branch)))
 (add-to-list 'mode-line-format '(:eval (fd-mode-line-vc-info)))
-(provide 'fd-git)

@@ -17,4 +17,3 @@
 (defun help-definition-prefixes-ad (fn)
   (or help-definition-prefixes (funcall fn)))
 (advice-add #'help-definition-prefixes :around 'help-definition-prefixes-ad)
-(provide 'fd-helm)

@@ -31,41 +31,31 @@
 (straight-use-package 'use-package)
 (use-package git)
 
-(add-to-list 'load-path (concat user-emacs-directory "lisp"))
+(defmacro init-require (sym)
+  `(let ((default-directory user-emacs-directory))
+    (load (expand-file-name (format "lisp/%s.el" (symbol-name ,sym))))))
+(add-to-list 'load-path 
+	     (let ((default-directory user-emacs-directory))
+	       (expand-file-name "lisp")))
 ; (require 'fd-benchmark-init)
-(require 'fd-misc)
-(require 'fd-misc-programming)
+(init-require 'fd-misc)
+(init-require 'fd-misc-programming)
 (use-package yaml-mode)
-(require 'fd-clipboard)
-(when (eq system-type 'darwin) (require 'fd-macosx))
+(init-require 'fd-clipboard)
+(when (eq system-type 'darwin) (init-require 'fd-macosx))
 ; (require 'fd-helm)
-(require 'fd-ivy)
+(init-require 'fd-ivy)
 ; (require 'fd-selectrum)
 (require 'fd-compilation)
-(require 'fd-python)
+(init-require 'fd-python)
 
 (straight-use-package
  '(fd-haskell :type git :host github :repo "fakedrake/fd-haskell"
               :files (:defaults "snippets")))
 (require 'fd-haskell)
 (fd-haskell-configure-haskell-mode)
-
-(require 'fd-lisp)
-(require 'fd-coq)
-(require 'fd-company)
-(require 'fd-git)
-(require 'fd-visual)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("d3a63c40fddcd2369b7465beca48ddd61fa8e980e9fa88adc52c3cfc78b2b352" default)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(init-require 'fd-lisp)
+(init-require 'fd-coq)
+(init-require 'fd-company)
+(init-require 'fd-git)
+(init-require 'fd-visual)

@@ -15,13 +15,13 @@
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+    (let ((buf (url-retrieve-synchronously
+		"https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+		nil 'inhibit-cookies) ))
+      (with-current-buffer buf
+	(goto-char (point-max))
+	(eval-print-last-sexp))))
+  (load bootstrap-file nil nil))
 
 (require 'package)
 (add-to-list 'package-archives '("melpa"
@@ -52,6 +52,7 @@
 (straight-use-package
  '(fd-haskell :type git :host github :repo "fakedrake/fd-haskell"
               :files (:defaults "snippets")))
+(straight-use-package 'haskell-snippets)
 (require 'fd-haskell)
 (fd-haskell-configure-haskell-mode)
 (init-require 'fd-lisp)

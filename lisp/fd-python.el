@@ -72,7 +72,6 @@
   :mode ("\\.py\\'" . python-mode)
   :interpreter ("python" . python-mode)
   :bind (:map python-mode-map
-              ("C-c M-t" . fd-python-run-tests)
               ("M-." . jedi:goto-definition)
               ("M-," . jedi:goto-definition-pop-marker)
               ("M-q" . 'python-smart-fill-paragraph))

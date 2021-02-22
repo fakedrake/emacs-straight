@@ -7,9 +7,6 @@
             (message "gc-cons-threshold restored to %S"
                      gc-cons-threshold)))
 
-(let (file-name-handler-alist)
-  (setq user-emacs-directory (file-name-directory load-file-name)))
-
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -32,11 +29,13 @@
 (use-package git)
 
 (defmacro init-require (sym)
-  `(let ((default-directory user-emacs-directory))
-    (load (expand-file-name (format "lisp/%s.el" (symbol-name ,sym))))))
-(add-to-list 'load-path 
+  `(load (expand-file-name (format "lisp/%s.el" (symbol-name ,sym))
+                           user-emacs-directory)))
+
+(add-to-list 'load-path
 	     (let ((default-directory user-emacs-directory))
 	       (expand-file-name "lisp")))
+
 ; (require 'fd-benchmark-init)
 (init-require 'fd-misc)
 (init-require 'fd-misc-programming)
@@ -55,8 +54,36 @@
 (straight-use-package 'haskell-snippets)
 (require 'fd-haskell)
 (fd-haskell-configure-haskell-mode)
+(defun fd-haskell-comint-mode-hook ()
+  (company-mode nil))
+(add-hook 'haskell-comint-mode-hook 'fd-haskell-comint-mode-hook)
+
 (init-require 'fd-lisp)
 (init-require 'fd-coq)
 (init-require 'fd-company)
 (init-require 'fd-git)
 (init-require 'fd-visual)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ivy-format-functions-alist
+   '((counsel-compile-env . counsel-compile-env--format-hint)
+     (counsel-kmacro . counsel--kmacro-format-function)
+     (counsel-colors-web . counsel--colors-web-format-function)
+     (counsel-colors-emacs . counsel--colors-emacs-format-function)
+     (counsel-evil-registers . counsel--yank-pop-format-function)
+     (counsel-yank-pop . counsel--yank-pop-format-function)
+     (counsel-git-log . counsel--git-log-format-function)
+     (counsel-faces . counsel--faces-format-function)
+     (swiper-isearch . swiper-isearch-format-function)
+     (swiper-all . swiper--all-format-function)
+     (swiper-multi . swiper--all-format-function)
+     (t . ivy-format-function-line))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

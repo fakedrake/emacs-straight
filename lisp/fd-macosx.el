@@ -14,7 +14,6 @@
 ; (global-smart-spacing-mode -1)  ; not on by default
 (remove-hook 'text-mode-hook 'smart-spacing-mode)   ; do not use smart spacing in text modes
 (global-visual-line-mode -1)  ; turn off Emacs 23 visual line
-(cua-mode nil)
 ; (transient-mark-mode nil)  ; (must switch off CUA mode as well for this to work)
 
 (setq mac-option-modifier 'meta

@@ -10,15 +10,14 @@
   (server-start))
 
 ;; Configurations
-(cua-mode -1)
 (delete-selection-mode t)
 (setq backup-directory-alist (list (cons "." (concat user-emacs-directory "backup/"))))
 (setq kill-do-not-save-duplicates t)
 (set-input-method 'greek)
 (toggle-input-method)
+(cua-mode -1)
 (setq scroll-step 1)
 (global-set-key (kbd "C-z") 'revert-buffer)
-
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 

@@ -4,6 +4,7 @@
   :custom ((ivy-display-style 'fancy)
            (ivy-use-virtual-buffers t))
   :config
+  (setf (alist-get t ivy-format-functions-alist) 'ivy-format-function-line)
   (ivy-mode t))
 
 (use-package counsel
@@ -18,13 +19,12 @@
 (use-package prescient)
 (use-package ivy-prescient
   :config
-  (ivy-prescient-mode t))
+  (push (cons 'fd-swiper-backward 'fd-ivy-recompute-index-swiper-backward)
+        ivy-index-functions-alist)
+   (ivy-prescient-mode t))
 
 (defun fd-ivy-recompute-index-swiper-backward (_re-str cands)
   (- (ivy-recompute-index-swiper _re-str cands) 1))
-
-(push (cons 'fd-swiper-backward 'df-ivy-recompute-index-swiper-backward)
-      ivy-index-functions-alist)
 
 (defun fd-swiper-backward (&optional initial-input)
   (interactive)
@@ -40,14 +40,36 @@ If the input is empty, select the previous history element instead."
       (ivy-next-history-element 1)
     (ivy-previous-line arg)))
 
-(use-package swiper
-  :bind (("C-M-s" . counsel-grep-or-swiper)
-         ("C-r" . fd-swiper-backward)
-         ("C-s" . swiper-isearch)
-         :map ivy-minibuffer-map
-         ("C-r" . swiper-C-r)))
+(defun fd-swiper--recompute-background-faces ()
+  "Background faces are the faces of matched strings that are not
+the selected ones. We use the same faces as the matched ones but
+a bit lighter using colir. The default function for recomputingn
+faces does not work if the match face has inheritted the
+attributes."
+  (let ((faces '(swiper-background-match-face-1
+                 swiper-background-match-face-2
+                 swiper-background-match-face-3
+                 swiper-background-match-face-4))
+        (colir-compose-method #'colir-compose-soft-light))
+    (cl-mapc (lambda (f1 f2)
+               (let* ((bg (face-background f1 nil 'use-inherit))
+                      ;; FIXME: (colir-color-parse "color-22") is nil.
+                      (bg (and bg (colir-color-parse bg))))
+                 (when bg
+                   (setq bg (colir-blend bg (colir-color-parse "#ffffff")))
+                   (set-face-background f2 bg))))
+             swiper-faces
+             faces)))
 
-(use-package ivy-hydra)
-(use-package which-key
+(use-package ctrlf
   :config
-  (add-hook 'after-init-hook 'which-key-mode))
+  (ctrlf-mode +1))
+
+;; Hit C-' during swiper to jump to a result
+;(use-package avy)
+
+; C-o to get commands
+;(use-package ivy-hydra)
+;; (use-package which-key
+;;   :config
+;;   (add-hook 'after-init-hook 'which-key-mode))

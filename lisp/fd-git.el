@@ -2,7 +2,7 @@
   :ensure t
   :pin melpa
   :bind (("C-x G" . magit-status)
-         ("C-x g" . magit-dispatch-popup))
+         ("C-x g" . magit-file-dispatch))
   :config
   (magit-auto-revert-mode -1))
 

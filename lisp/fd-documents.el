@@ -47,8 +47,7 @@ mode-line.")
             (org-count-words (point-min) (point-max)))))
 
 (defun fd-org-mode-hook ()
-  (word-count-msg 1))
-
+  (org-wc-mode 1))
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
@@ -58,4 +57,36 @@ mode-line.")
   (add-to-list 'org-file-apps '("\\.pdf\\'" . "open")))
 
 
+(setq fd-todo-highlights
+      '(("\\[todo:\\([^\\]]+?\\)\\]" . (1 font-lock-constant-face))))
+
+
+(define-minor-mode fd-org-highlights
+  "Highlight varous things in org mode."
+  nil
+  " fd-hl"
+  nil
+  (font-lock-add-keywords nil '("\\[todo:[\\]\\]" . 'error))
+
+  (if (fboundp 'font-lock-flush)
+      (font-lock-flush)
+    (when font-lock-mode
+      (with-no-warnings (font-lock-fontify-buffer)))))
+
+(if-let ((lt-path (locate-file "languagetool" exec-path)))
+    (use-package langtool
+      :init
+      (setq langtool-bin lt-path)))
+
+(if-let ((lt-path (locate-file  exec-path)))
+    (use-package langtool
+      :init
+      (setq langtool-bin lt-path)))
+
+
+(setq langtool-jar "/usr/local/Cellar/languagetool/5.2.3/libexec/languagetool.jar")
+(use-package languagetool
+  :config
+  (setq languagetool-server-language-tool-jar "/usr/local/Cellar/languagetool/5.2.3/libexec/languagetool-server.jar")
+  (setq languagetool-language-tool-jar langtool-jar))
 (use-package org-ref)

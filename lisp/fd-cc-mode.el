@@ -1,9 +1,9 @@
 (require 'cc-mode)
-(use-package cmake-mode
-  :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'"))
-(use-package cmake-font-lock
-  :after (cmake-mode)
-  :hook (cmake-mode . cmake-font-lock-activate))
+;; (use-package cmake-mode
+;;   :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'"))
+;; (use-package cmake-font-lock
+;;   :after (cmake-mode)
+;;   :hook (cmake-mode . cmake-font-lock-activate))
 
 
 (use-package clang-format
@@ -47,14 +47,23 @@ at least one .cpp file in the same directory."
               (directory-files default-directory)))
     (c++-mode)))
 
-(defun fd-cc-mode-init ()
-
-  (c++-to-headers-mode))
+(defun flycheck-no-remote ()
+  (unless (file-remote-p (buffer-file-name (current-buffer)))
+    (flycheck-mode 1)))
 
 (use-package flycheck
   :config
   (setq flycheck-clang-language-standard "c++2a")
-  (add-hook 'c++-mode-hook 'flycheck-mode)
-  (add-hook 'c-mode-hook 'flycheck-mode))
+  (add-hook 'c++-mode-hook 'flycheck-no-remote)
+  (add-hook 'c-mode-hook 'flycheck-no-remote))
+
+(use-package ggtags
+  ; :hook ((c++-mode-hook . ggtags-mode))
+  :config
+  (define-key ggtags-navigation-map "\M->" nil)
+  (define-key ggtags-navigation-map "\M-<" nil)
+  (setq ggtags-highlight-tag nil)
+  (add-hook 'c++-mode-hook 'ggtags-mode)
+  (add-hook 'c-mode-hook 'ggtags-mode))
 
 (provide 'fd-cc-mode)

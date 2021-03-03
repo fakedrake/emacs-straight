@@ -58,6 +58,7 @@
   (company-mode nil))
 (add-hook 'haskell-comint-mode-hook 'fd-haskell-comint-mode-hook)
 
+(init-require 'fd-cc-mode)
 (init-require 'fd-lisp)
 (init-require 'fd-coq)
 (init-require 'fd-company)

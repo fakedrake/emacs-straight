@@ -96,11 +96,9 @@ returns non-nil if the function is to be called."
     paths)))
 
 (defun fd-compilation-root (filename)
-  (file-name-as-directory
-   (or-exists (when (boundp 'compile-root) compile-root)
-              (fd-project-root filename ".dir-locals.el")
-              (fd-project-root filename)
-              filename)))
+  (or (when (boundp 'compile-root) compile-root)
+      (fd-project-root filename ".dir-locals.el")
+      (file-name-as-directory filename)))
 
 (defun fd-recompile ()
   (interactive)

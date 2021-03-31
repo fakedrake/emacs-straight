@@ -13,8 +13,12 @@
          ("C-h v" . counsel-describe-variable)
          ("C-x i" . counsel-imenu)
          ("C-x M-f" . counsel-git)
-         ("C-x C-f" . counsel-find-file)))
+         ("C-x C-f" . counsel-find-file))
+  :config
+  (setf (alist-get 'counsel-M-x ivy-initial-inputs-alist nil 'remove-item) nil))
 
+
+(use-package amx)
 ;; ;; Better filtering
 ;; (use-package prescient)
 ;; (use-package ivy-prescient

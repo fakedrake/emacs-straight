@@ -1,0 +1,8 @@
+# name: Org mode latex block
+# key: <l
+# --
+#+BEGIN_EXPORT latex
+\begin{align*}
+$0
+\end{align*}
+#+END_EXPORT

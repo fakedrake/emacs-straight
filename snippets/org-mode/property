@@ -1,0 +1,4 @@
+# name: Org mode single property
+# key: <pp
+# --
+:${1:KEY}: $0

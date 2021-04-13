@@ -1,0 +1,6 @@
+# name: Org mode properties block
+# key: <p
+# --
+:PROPERTIES:
+:CUSTOM_ID: ${1:`(s-replace " " "-" (s-downcase (org-get-heading)))`}
+:END:$0

@@ -1,0 +1,6 @@
+# name: Org mode center
+# key: <c
+# --
+#+BEGIN_CENTER
+$0
+#+END_CENTER

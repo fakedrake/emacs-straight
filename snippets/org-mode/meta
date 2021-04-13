@@ -1,0 +1,13 @@
+# name: Org mode header
+# key: meta
+# --
+#+TITLE:       $1
+#+AUTHOR:      Chris Perivolaropoulos
+#+EMAIL:       cperivol@csail.mit.edu
+#+DESCRIPTION: $2
+#+KEYWORDS:
+#+LANGUAGE:    en
+#+OPTIONS:     H:2 num:t toc:t \n:nil @:t ::t |:t ^:t f:t TeX:t
+#+STARTUP:     showall
+
+$0

@@ -52,6 +52,7 @@
 (init-require 'fd-tags)
 (init-require 'fd-documents)
 
+(init-require 'fd-cc-mode)
 (init-require 'fd-lisp)
 (init-require 'fd-coq)
 (init-require 'fd-company)

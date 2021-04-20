@@ -37,7 +37,9 @@
 	       (expand-file-name "lisp")))
 
 ; (require 'fd-benchmark-init)
+
 (init-require 'fd-misc)
+(init-require 'fd-grep)
 (init-require 'fd-misc-programming)
 (use-package yaml-mode)
 (init-require 'fd-clipboard)

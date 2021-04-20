@@ -87,13 +87,20 @@ at least one .cpp file in the same directory."
   (add-hook 'c++-mode-hook 'flycheck-no-remote)
   (add-hook 'c-mode-hook 'flycheck-no-remote))
 
-(use-package ggtags
-  ; :hook ((c++-mode-hook . ggtags-mode))
-  :config
-  (define-key ggtags-navigation-map "\M->" nil)
-  (define-key ggtags-navigation-map "\M-<" nil)
-  (setq ggtags-highlight-tag nil)
-  (add-hook 'c++-mode-hook 'ggtags-mode)
-  (add-hook 'c-mode-hook 'ggtags-mode))
+;; (use-package ggtags
+;;   :hook ((c++-mode-hook . ggtags-mode))
+;;   :config
+;;   (define-key ggtags-navigation-map "\M->" nil)
+;;   (define-key ggtags-navigation-map "\M-<" nil)
+;;   (setq ggtags-highlight-tag nil)
+;;   (add-hook 'c++-mode-hook 'ggtags-mode)
+;;   (add-hook 'c-mode-hook 'ggtags-mode))
+
+(use-package counsel-gtags
+  :hook ((c-mode-common . counsel-gtags-mode))
+  :bind (:map
+         counsel-gtags-mode-map
+         ("M-." . counsel-gtags-dwim)
+         ("M-," . counsel-gtags-go-backward)))
 
 (provide 'fd-cc-mode)

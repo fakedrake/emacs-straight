@@ -1,6 +1,9 @@
 (use-package ivy
   :ensure t
-  :bind (("C-x b" . ivy-switch-buffer))
+  :bind (("C-x b" . ivy-switch-buffer)
+         :map ivy-minibuffer-map
+         ("C-j" . 'ivy-immediate-done)
+         ("C-M-j" . 'ivy-alt-done))
   :custom ((ivy-display-style 'fancy)
            (ivy-use-virtual-buffers t))
   :config

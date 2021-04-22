@@ -220,3 +220,4 @@ parent."
 
 (electric-indent-mode -1)
 (savehist-mode 1)
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)

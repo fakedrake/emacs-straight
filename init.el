@@ -39,11 +39,11 @@
 ; (require 'fd-benchmark-init)
 
 (init-require 'fd-misc)
-(init-require 'fd-grep)
 (init-require 'fd-misc-programming)
 (use-package yaml-mode)
 (init-require 'fd-clipboard)
 (when (eq system-type 'darwin) (init-require 'fd-macosx))
+(init-require 'fd-grep)
 ; (require 'fd-helm)
 (init-require 'fd-ivy)
 ; (require 'fd-selectrum)

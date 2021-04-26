@@ -2,8 +2,8 @@
   :ensure t
   :bind (("C-x b" . ivy-switch-buffer)
          :map ivy-minibuffer-map
-         ("C-j" . 'ivy-immediate-done)
-         ("C-M-j" . 'ivy-alt-done))
+         ("C-S-j" . 'ivy-immediate-done) ; Use the current input
+         ("C-j" . 'ivy-alt-done)) ; go into the selected directory
   :custom ((ivy-display-style 'fancy)
            (ivy-use-virtual-buffers t))
   :config

@@ -50,6 +50,8 @@
 (require 'fd-compilation)
 (init-require 'fd-python)
 (init-require 'fd-haskell)
+(init-require 'fd-nix)
+(init-require 'fd-flycheck)
 (init-require 'fd-rust)
 (init-require 'fd-tags)
 (init-require 'fd-documents)

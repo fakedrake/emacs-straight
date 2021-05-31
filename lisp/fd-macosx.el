@@ -37,14 +37,7 @@
   (if (string-match "[ \t\n\r]+\\'" s)
       (replace-match "" t t s)
     s))
-
-(setq el-get-emacs
-      (concat
-       (s-trim-right
-        (shell-command-to-string
-         "find /usr/local/Cellar/emacs -name 'bin'"))
-       "/emacs"))
-(setenv "EMACS" el-get-emacs)
+(setenv "LD_LIBRARY_PATH" (concat "/opt/homebrew/lib:" (getenv "LD_LIBRARY_PATH")))
 
 (defun copy-from-osx ()
   (let ((default-directory "~"))

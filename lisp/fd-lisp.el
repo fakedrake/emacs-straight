@@ -14,4 +14,8 @@
   (define-key emacs-lisp-mode-map (kbd "M-.") 'xref-find-definitions)
   (define-key emacs-lisp-mode-map (kbd "C-M-d") 'edebug-defun))
 
+
+(use-package chicken-scheme)
+(use-package geiser-chez)
+(use-package geiser-chicken)
 (add-hook 'emacs-lisp-mode-hook 'fd-elisp-hooks)

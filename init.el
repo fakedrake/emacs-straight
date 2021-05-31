@@ -53,12 +53,13 @@
 (init-require 'fd-rust)
 (init-require 'fd-tags)
 (init-require 'fd-documents)
-
+(use-package realgud-lldb)
 (init-require 'fd-cc-mode)
 (init-require 'fd-lisp)
 (init-require 'fd-coq)
 (init-require 'fd-company)
 (init-require 'fd-git)
+(init-require 'fd-factor)
 (init-require 'fd-visual)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

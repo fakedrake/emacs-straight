@@ -179,7 +179,7 @@ parent."
 ;; PATH in emacs
 (defun set-exec-path-from-shell-PATH ()
   (interactive)
-  (let ((path-from-shell (car (reverse (split-string (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))))
+  (let ((path-from-shell (car (reverse (split-string (shell-command-to-string "echo -n $PATH") ":")))))
     (setenv "PATH" path-from-shell)
     (setenv "EDITOR" "emacsclient")
     (setenv "EMACS" (s-trim (shell-command-to-string "echo $EMACS")))
@@ -213,6 +213,7 @@ parent."
     (inhibit-same-window . t)))
 
 (add-to-list 'exec-path (concat (getenv "HOME") "/.local/bin/"))
+(add-to-list 'exec-path (concat (getenv "HOME") "/.nix-profile/bin"))
 (setq pop-up-frames nil)
 (add-to-list 'display-buffer-alist
              '("\\*compilation\\*" display-buffer-reuse-window

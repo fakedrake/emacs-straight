@@ -10,7 +10,7 @@
 		 (concat github-prefix (git-relative-filename filename))
 	       filename)))
     (if (and (not is-directory) line-info)
-	(concat uri linum-sep (int-to-string (current-line)))
+	(concat uri linum-sep (int-to-string (line-number-at-pos)))
       uri)))
 
 (defun git-root-directory (fname)

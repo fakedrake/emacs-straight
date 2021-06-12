@@ -7,6 +7,7 @@
               :files (:defaults "snippets")))
 (straight-use-package 'haskell-snippets)
 (require 'fd-haskell)
+(require 'fd-haskell-tags)
 (fd-haskell-configure-haskell-mode)
 (defun fd-haskell-comint-mode-hook ()
   (company-mode 1))

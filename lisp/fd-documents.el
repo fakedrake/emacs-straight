@@ -91,3 +91,6 @@ mode-line.")
   (setq languagetool-server-language-tool-jar "/usr/local/Cellar/languagetool/5.2.3/libexec/languagetool-server.jar")
   (setq languagetool-language-tool-jar langtool-jar))
 (use-package org-ref)
+
+
+(use-package auctex)

@@ -5,10 +5,12 @@
   :hook ((prog-mode . lsp-deferred))
   :commands (lsp lsp-deferred)
   :config
-  (setq lsp-ui-doc-enable nil)
+  (advice-add 'lsp-resolve-final-function :filter-return #'lsp-server-wrapper-function-nix)
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\..*-stack-dir\\'"))
 
 (use-package lsp-ui
+  :config
+  (setq lsp-ui-doc-enable nil)
   (setq lsp-ui-sideline-diagnostic-max-lines 3))
 
 ;; optionally
@@ -18,7 +20,6 @@
 ; cmake -H. -BDebug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=YES
 (use-package ccls)
 ; (setq lsp-log-io t) to log the exact LSP messages going between the server and client.
-(advice-add 'lsp-resolve-final-function :filter-return #'lsp-server-wrapper-function-nix)
 (defun lsp-server-wrapper-function-nix (argv)
   (if (nix-find-sandbox default-directory)
       (append (list "nix-shell" "-I" "." "--command" )

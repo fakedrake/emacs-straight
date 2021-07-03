@@ -1,7 +1,8 @@
- (use-package writegood-mode
-    :bind ("C-c g" . writegood-mode)
-    :config
-    (add-to-list 'writegood-weasel-words "actionable"))
+;; Colorize issues with the writing in the buffer.
+(use-package writegood-mode
+  :bind ("C-c g" . writegood-mode)
+  :config
+  (add-to-list 'writegood-weasel-words "actionable"))
 
 (defun org-count-words (start end)
   "Count words in region skipping code blocks"
@@ -93,4 +94,41 @@ mode-line.")
 (use-package org-ref)
 
 
-(use-package auctex)
+(use-package tex
+  :straight auctex
+  :commands TeX-mode)
+
+(defun fd-tex-hook ()
+  (setq TeX-command-default "latexmk")
+  (push '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t :help "Run latexmk on file")
+        TeX-command-list))
+
+(use-package lua-mode)
+
+(require 'fd-auctex-lua)
+(use-package latex
+  :straight auctex
+  :commands LaTeX-mode
+  :after '(tex lua-mode)
+  :config
+  (setq TeX-PDF-mode t)
+  (define-key LaTeX-mode-map (kbd "C-c '") 'LaTeX-edit-Lua-code-start)
+  (add-hook 'LaTeX-mode-hook
+            (lambda ()
+              ))
+  (add-hook 'TeX-mode-hook 'fd-tex-hook)
+
+  (setq TeX-view-program-selection '((output-pdf "Skim Viewer")))
+  (setq TeX-view-program-list
+        '(("Skim Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+
+  (custom-set-variables
+   '(TeX-source-correlate-method 'synctex)
+   '(TeX-source-correlate-mode t)
+   '(TeX-source-correlate-start-server t))
+  (add-hook 'LaTeX-mode-hook 'reftex-mode)
+  (setq preview-auto-reveal t)
+  (message "Setup of latex done"))
+(use-package company-auctex
+  :ensure t
+  :hook (TeX-mode . company-auctex-init))

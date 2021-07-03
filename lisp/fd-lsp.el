@@ -2,7 +2,7 @@
   :init
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
-  :hook ((prog-mode . lsp-deferred))
+  :hook ((cc-mode . lsp-deferred) (haskell-mode . lsp-deferred))
   :commands (lsp lsp-deferred)
   :config
   (advice-add 'lsp-resolve-final-function :filter-return #'lsp-server-wrapper-function-nix)

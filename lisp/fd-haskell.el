@@ -12,3 +12,17 @@
 (defun fd-haskell-comint-mode-hook ()
   (company-mode 1))
 (add-hook 'haskell-comint-mode-hook 'fd-haskell-comint-mode-hook)
+
+
+(advice-add 'haskell-shell-calculate-command :around
+            #'haskell-shell-calculate-command/around)
+
+(defun haskell-shell-calculate-command/around (oldfn)
+  (if-let ((sandbox (nix-find-sandbox default-directory)))
+      (format "nix-shell --command \"%s\" %s" (funcall oldfn)
+              sandbox)
+    (funcall oldfn)))
+(use-package auto-minor-mode
+  :config
+  (require 'fd-profiterole)
+  (add-to-list 'auto-minor-mode-alist '(".profiterole.txt" . profiterole-mode)))

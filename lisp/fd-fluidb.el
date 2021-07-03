@@ -248,7 +248,7 @@ branchNUM1.txt where NUM1 = NUM0 - 1"
   "With the point over a line in the *.profiterole.txt file"
   (unless (s-suffix? ".profiterole.txt" (buffer-file-name))
     (error "Not in a *.profiterole.txt file"))
-  (let* ((ws (s-split " " (current-line-string) t))
+  (let* ((ws (s-split " " (thing-at-point 'line t) t))
          (sym (concat (nth 3 ws) " " (nth 4 ws)))
          (conf-line (concat conf ": " sym "\n")))
     (with-current-buffer (find-file-noselect
@@ -276,6 +276,31 @@ branchNUM1.txt where NUM1 = NUM0 - 1"
      nil
      t nil 'profiterole-update-hist)))
   (profiterole-line conf)
+  (profiterole-reload))
+
+(defun profiterole-reload ()
+  (interactive)
   (let ((file (profiterole-prof-file (buffer-file-name))))
     (shell-command (format "profiterole %s > /dev/null" file)))
   (revert-buffer nil t))
+
+(defun profiterole-bury ()
+  (interactive)
+  (profiterole-update "bury"))
+
+(defun profiterole-omit ()
+  (interactive)
+  (profiterole-update "omit"))
+
+(setq profiterole-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c b") 'profiterole-bury)
+    (define-key map (kbd "C-c o") 'profiterole-bury)
+    (define-key map (kbd "C-c u") 'profiterole-reload)
+    map))
+(define-derived-mode profiterole-mode fundamental-mode "profiterole"
+  "Deal with profiterole."
+  (use-local-map profiterole-mode-map)
+  (read-only-mode))
+
+(add-to-list 'auto-mode-alist '("\\.profiterole.txt\\'" . profiterole-mode))

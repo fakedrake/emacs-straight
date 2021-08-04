@@ -17,7 +17,6 @@
 (use-package lsp-haskell)
 
 ; cmake -H. -BDebug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=YES
-(use-package ccls)
 ; (setq lsp-log-io t) to log the exact LSP messages going between the server and client.
 (defun lsp-server-wrapper-function-nix (argv)
   (if (nix-find-sandbox default-directory)

@@ -103,4 +103,8 @@ at least one .cpp file in the same directory."
          ("M-." . counsel-gtags-dwim)
          ("M-," . counsel-gtags-go-backward)))
 
+(use-package modern-cpp-font-lock
+  :config
+  (modern-c++-font-lock-global-mode t))
+
 (provide 'fd-cc-mode)

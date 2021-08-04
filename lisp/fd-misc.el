@@ -4,6 +4,7 @@
 ;; with emacs here.
 
 ;; Server configuration
+(use-package s)
 (require 'server)
 (if (server-running-p)
     (message "Skipping server creation, one already exists")
@@ -85,7 +86,7 @@ parent."
   (replace-regexp-in-string "[^/]+$" ""
                             (directory-file-name fname)))
 
-(eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
+(eval-after-load 'tramp '(setenv "SHELL" (executable-find "bash")))
 
 (defadvice save-buffer (around save-buffer-as-root-around activate)
   "Use sudo to save the current buffer."
@@ -94,7 +95,7 @@ parent."
 	   (file-accessible-directory-p
 	    (file-directory-name (buffer-file-name)))
 	   (not (file-writable-p (buffer-file-name)))
-	   (not (string/starts-with buffer-file-name "/sudo")))
+	   (not (s-starts-with-p buffer-file-name "/sudo")))
       (let ((buffer-file-name (format "/sudo::%s" buffer-file-name)))
 	ad-do-it)
     ad-do-it))

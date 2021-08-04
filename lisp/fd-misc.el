@@ -223,3 +223,13 @@ parent."
 (savehist-mode 1)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 (setenv "PATH" (shell-command-to-string "echo -n $PATH"))
+(setq reb-re-syntax 'rx)
+
+(rx-define path-base () (+ (in word ?_ ?- ?.)))
+(rx-define path-ext (ext)
+  (seq symbol-start (? ?/) (+ (path-base) ?/) (path-base) ?. ext symbol-end))
+(rx-define path-ext-linum (ext grp-path grp-line)
+  (: (group-n grp-path (path-ext ext)) ?: (group-n grp-line (+ (in digit)))))
+
+(rx-define path-ext-linum-maybe-col (ext grp-path grp-linum grp-col)
+  (: (path-ext-linum ext grp-path grp-linum) (? ?: (group-n grp-col (+ (in digit))))))

@@ -52,6 +52,7 @@
 (init-require 'fd-haskell)
 (init-require 'fd-nix)
 (init-require 'fd-flycheck)
+(init-require 'fd-fluidb)
 (init-require 'fd-rust)
 (init-require 'fd-tags)
 (init-require 'fd-documents)
@@ -82,7 +83,13 @@
      (swiper-isearch . swiper-isearch-format-function)
      (swiper-all . swiper--all-format-function)
      (swiper-multi . swiper--all-format-function)
-     (t . ivy-format-function-line))))
+     (t . ivy-format-function-line)))
+ '(safe-local-variable-values
+   '((TeX-auto-local . "/Users/cperivol/Projects/phd/thesis/style")
+     (TeX-style-local . "/Users/cperivol/Projects/phd/thesis/style")
+     (reftex-default-bibliography "/Users/cperivol/Projects/phd/thesis/bib/zotero.bib")
+     (compile-root . "/Users/cperivol/Projects/phd/thesis/")))
+ '(warning-suppress-types '((comp) (:warning))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

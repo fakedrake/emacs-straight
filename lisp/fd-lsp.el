@@ -5,8 +5,7 @@
   :hook ((cc-mode . lsp-deferred) (haskell-mode . lsp-deferred))
   :commands (lsp lsp-deferred)
   :config
-  (advice-add 'lsp-resolve-final-function :filter-return #'lsp-server-wrapper-function-nix)
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\..*-stack-dir\\'"))
+  (advice-add 'lsp-resolve-final-function :filter-return #'lsp-server-wrapper-function-nix))
 
 (use-package lsp-ui
   :config

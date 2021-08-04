@@ -1,3 +1,4 @@
+(use-package  nix-mode)
 (use-package nix-sandbox
   :config
   (setenv "NIX_PATH" (shell-command-to-string "echo -n $NIX_PATH"))

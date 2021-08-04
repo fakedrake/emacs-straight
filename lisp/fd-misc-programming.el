@@ -35,5 +35,5 @@ each line."
 (setq whitespace-line-column 80)
 (global-whitespace-mode t)
 (setq narrow-to-defun-include-comments t)
-(setq project-vc-ignores '(".stack-work"))
+(setq project-vc-ignores '())
 (add-hook 'shell-mode-hook 'compilation-shell-minor-mode)

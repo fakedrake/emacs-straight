@@ -9,6 +9,7 @@
 (require 'fd-haskell)
 (require 'fd-haskell-tags)
 (fd-haskell-configure-haskell-mode)
+(add-hook 'haskell-comint-mode-hook 'fd-haskell-comint-mode-hook)
 (defun fd-haskell-comint-mode-hook ()
   (company-mode 1))
 (add-hook 'haskell-comint-mode-hook 'fd-haskell-comint-mode-hook)
@@ -22,7 +23,14 @@
       (format "nix-shell --command \"%s\" %s" (funcall oldfn)
               sandbox)
     (funcall oldfn)))
-(use-package auto-minor-mode
-  :config
-  (require 'fd-profiterole)
-  (add-to-list 'auto-minor-mode-alist '(".profiterole.txt" . profiterole-mode)))
+
+(setf (alist-get 'haskell-called-at compilation-error-regexp-alist-alist)
+      (list (rx (: "called at" (in blank) (path-ext-linum-maybe-col "hs" 1 2 3))) 1 2 3 2))
+(setf (alist-get 'haskell-warning compilation-error-regexp-alist-alist)
+      (list (rx (: bol (path-ext-linum-maybe-col "hs" 1 2 3) ": warning")) 1 2 3 1))
+(setf (alist-get 'haskell-error compilation-error-regexp-alist-alist)
+      (list (rx (: bol (path-ext-linum-maybe-col "hs" 1 2 3) ": error")) 1 2 3 2))
+
+(defun fd-haskell-comint-mode-hook ()
+  (set (make-variable-buffer-local 'compilation-error-regexp-alist)
+       '(haskell-called-at haskell-warning haskell-error)))

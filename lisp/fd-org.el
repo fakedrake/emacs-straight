@@ -2,7 +2,7 @@
 
 (defun org-count-words (start end)
   "Count words in region skipping code blocks"
-  (let ((words 0))
+n  (let ((words 0))
     (save-excursion
       (save-restriction
         (narrow-to-region start end)
@@ -103,6 +103,10 @@ mode-line.")
   (require 'lsp-ltex)
   (lsp))
 
+(defun clear-lsp-major-modes (client)
+  (if-let ((h (gethash client lsp-clients)))
+      (setf (lsp--client-major-modes h) '())))
+
 (use-package lsp-ltex
   :ensure t
   :config
@@ -110,7 +114,32 @@ mode-line.")
     (setq lsp-ltex-latex-commands `((,(intern "\\code{}") . "dummy")))
     (setf (lsp--client-major-modes (gethash 'ltex-ls lsp-clients))
           '(plain-tex-mode latex-mode org-mode))
-    (setf (lsp--client-major-modes (gethash 'digestif lsp-clients))
-          '())
-    (setf (lsp--client-major-modes (gethash 'texlab lsp-clients))
-          '())))  ; or lsp-deferred
+    (clear-lsp-major-modes 'digestif)
+    (clear-lsp-major-modes 'texlab)))
+
+(defun org-roam-setup-captures ()
+  (("d" "default" plain "%?" :if-new
+    (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}")
+    :unnarrowed t)
+
+   ("t" "A note about the fluidb thesis." ; Description
+    plain ; the kind
+    "%?"  ; the template (just put the cursor in an empty file)
+    :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                       "#+title: ${title}\n#+filetags: thesis")
+    :jump-to-captured t
+    :unnoarrowed t)))
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom ((org-roam-directory "~/RoamNotes")
+           (org-return-follows-link t)
+           (org-roam-completion-everywhere t))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-M-i" . completion-at-point))
+  :config
+  (org-roam-setup))

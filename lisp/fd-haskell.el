@@ -1,6 +1,9 @@
 (use-package haskell-mode
   :after (company-mode)
-  :hook ((haskell-mode . company-mode)))
+  :hook ((haskell-mode . fd-haskell-mode-hook)))
+
+(defun fd-haskell-mode-hook ()
+  (company-mode))
 
 (straight-use-package
  '(fd-haskell :type git :host github :repo "fakedrake/fd-haskell"

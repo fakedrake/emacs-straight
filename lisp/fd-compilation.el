@@ -243,11 +243,11 @@ the top."
   (let ((gud-buffer (apply 'fd-recompile args)))
     (funcall gud-command "compilation")))
 
-(ignore-errors
-  (require 'ansi-color)
-  (defun my-colorize-compilation-buffer ()
-    (ansi-color-apply-on-region compilation-filter-start (point-max)))
-  (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
+;; (ignore-errors
+;;   (require 'ansi-color)
+;;   (defun my-colorize-compilation-buffer ()
+;;     (ansi-color-apply-on-region compilation-filter-start (point-max)))
+;;   (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
 
 (defun fd-next-error-hook ()
   (message "Next!"))

@@ -304,3 +304,5 @@ branchNUM1.txt where NUM1 = NUM0 - 1"
   (read-only-mode))
 
 (add-to-list 'auto-mode-alist '("\\.profiterole.txt\\'" . profiterole-mode))
+
+(require 'fd-fluidb-comint)

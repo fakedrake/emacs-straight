@@ -47,6 +47,10 @@
 ; (require 'fd-helm)
 (init-require 'fd-ivy)
 ; (require 'fd-selectrum)
+
+
+;; Programming modes
+(init-require 'fd-lsp) ; must be before all programming stuff
 (require 'fd-compilation)
 (init-require 'fd-python)
 (init-require 'fd-haskell)
@@ -56,10 +60,9 @@
 (init-require 'fd-rust)
 (init-require 'fd-tags)
 (init-require 'fd-documents)
-(use-package realgud-lldb)
+(init-require 'fd-org)
 
 (init-require 'fd-cc-mode)
-(init-require 'fd-lsp)
 (init-require 'fd-lisp)
 (init-require 'fd-coq)
 (init-require 'fd-company)

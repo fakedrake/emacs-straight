@@ -234,3 +234,22 @@ parent."
 
 (rx-define path-ext-linum-maybe-col (ext grp-path grp-linum grp-col)
   (: (path-ext-linum ext grp-path grp-linum) (? ?: (group-n grp-col (+ (in digit))))))
+
+
+(use-package helpful
+  :demand
+  :config
+  (global-set-key (kbd "C-h f") #'helpful-callable)
+  (global-set-key (kbd "C-h v") #'helpful-variable)
+  (global-set-key (kbd "C-h k") #'helpful-key))
+
+
+(defun fd-indent (begin-rx end-rx)
+  (save-excursion
+    (let ((offset 0))
+      (while (< (point) (point-max))
+        (cond
+         ((looking-at begin-rx) (indent-line-to offset) (setq offset (+ 2 offset)))
+         ((looking-at end-rx) (setq offset (- offset 2)) (indent-line-to offset))
+         (t (indent-line-to offset)))
+        (forward-line)))))

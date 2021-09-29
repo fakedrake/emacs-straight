@@ -68,6 +68,7 @@
 (init-require 'fd-company)
 (init-require 'fd-git)
 (init-require 'fd-factor)
+(init-require 'fd-yasnippet)
 (init-require 'fd-fluidb)
 (init-require 'fd-visual)
 (custom-set-variables

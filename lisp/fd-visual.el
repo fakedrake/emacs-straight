@@ -82,7 +82,7 @@
 (menu-bar-mode -1)
 (scroll-bar-mode -1)	; no scroll bars
 (add-hook 'find-file-hook (lambda () (setq show-trailing-whitespace t)))
-(global-linum-mode 1)	; add line numbers on the left
+(global-display-line-numbers-mode 1)	; add line numbers on the left
 (show-paren-mode t)
 
 (use-package naquadah-theme

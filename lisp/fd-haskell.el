@@ -37,3 +37,4 @@
 (defun fd-haskell-comint-mode-hook ()
   (set (make-variable-buffer-local 'compilation-error-regexp-alist)
        '(haskell-called-at haskell-warning haskell-error)))
+(require 'fd-fluidb-comint)

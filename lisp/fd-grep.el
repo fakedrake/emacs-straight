@@ -8,6 +8,6 @@
   :after (wgrep)
   :config
   (defalias 'rgrep 'rg)
-  (setq rg-executable (executable-find "rg"))
+  (setq rg-executable "rg")
   (autoload 'wgrep-rg-setup "wgrep-rg")
   (add-hook 'rg-mode-hook 'wgrep-rg-setup))

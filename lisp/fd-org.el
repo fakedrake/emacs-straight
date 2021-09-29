@@ -45,7 +45,15 @@ mode-line.")
 
 (defun fd-org-mode-hook ()
   (yas-minor-mode)
-  (org-wc-mode 1))
+  (org-wc-mode 1)
+  (setq-local electric-pair-pairs
+              (append '((?* . ?*) (?/ . ?/) (?~ . ?~)) electric-pair-pairs))
+  ; remove angle branckets from the syntax table. Electric pair mode
+  ; tries to match them but they are also used as snippets `'
+  (let ((stx (make-syntax-table)))
+    (modify-syntax-entry ?< "_" stx)
+    (modify-syntax-entry ?> "_" stx)
+    (set-syntax-table stx)))
 
 (setq fd-todo-highlights
       '(("\\[todo:\\([^\\]]+?\\)\\]" . (1 font-lock-constant-face))))
@@ -72,6 +80,7 @@ mode-line.")
               ("S-<left>" . 'windmove-left)
               ("S-<right>" . 'windmove-right)
               ("<C-tab>". 'yas-expand))
+  :custom ((org-image-actual-width 500))
   :hook ((org-mode . fd-org-mode-hook))
   :config
   (org-wc-mode 1)
@@ -141,5 +150,8 @@ mode-line.")
          ("C-c n i" . org-roam-node-insert)
          :map org-mode-map
          ("C-M-i" . completion-at-point))
+  :bind-keymap ("C-c n d" . org-roam-dailies-map)
   :config
+  (require 'org-roam-dailies) ;; Ensure the keymap is available
+  (org-roam-db-autosync-mode)
   (org-roam-setup))

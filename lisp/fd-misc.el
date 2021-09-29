@@ -197,7 +197,6 @@ parent."
 
 (global-set-key (kbd "M-q") 'fill-paragraph)
 (global-set-key (kbd "C-h a") 'apropos)
-(global-set-key (kbd "M-v") (lambda () (interactive) (message "Use C-y to paste")))
 
 (use-package grep
   :config

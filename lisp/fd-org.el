@@ -1,21 +1,21 @@
-
+(setq org-nodes-directory (expand-file-name "~/RoamNotes"))
 
 (defun org-count-words (start end)
   "Count words in region skipping code blocks"
-n  (let ((words 0))
+  (let ((words 0))
     (save-excursion
       (save-restriction
         (narrow-to-region start end)
         (goto-char (point-min))
         (while (forward-word-strictly 1)
           (when
-           (save-excursion
-             (back-to-indentation)
-             (cond ((looking-at "#\\+begin_") t)
-                   ((looking-at "#") (forward-line) nil)
-                   (t (setq words (1+ words)) nil)))
-           (unless (re-search-forward "^[ \n]*#\\+end_src" nil t)
-             (goto-char (point-max)))))))
+              (save-excursion
+                (back-to-indentation)
+                (cond ((looking-at "#\\+begin_") t)
+                      ((looking-at "#") (forward-line) nil)
+                      (t (setq words (1+ words)) nil)))
+            (unless (re-search-forward "^[ \n]*#\\+end_src" nil t)
+              (goto-char (point-max)))))))
     words))
 
 ;; add length display to mode-line construct
@@ -35,8 +35,6 @@ A null prefix argument turns it off.
 When enabled, the total number of words is displayed in the
 mode-line.")
 
-
-
 (defun word-count-msg ()
   (if (use-region-p)
       (format " region words:%d" (org-count-words (point) (mark)))
@@ -48,8 +46,8 @@ mode-line.")
   (org-wc-mode 1)
   (setq-local electric-pair-pairs
               (append '((?* . ?*) (?/ . ?/) (?~ . ?~)) electric-pair-pairs))
-  ; remove angle branckets from the syntax table. Electric pair mode
-  ; tries to match them but they are also used as snippets `'
+                                        ; remove angle branckets from the syntax table. Electric pair mode
+                                        ; tries to match them but they are also used as snippets `'
   (let ((stx (make-syntax-table)))
     (modify-syntax-entry ?< "_" stx)
     (modify-syntax-entry ?> "_" stx)
@@ -57,7 +55,6 @@ mode-line.")
 
 (setq fd-todo-highlights
       '(("\\[todo:\\([^\\]]+?\\)\\]" . (1 font-lock-constant-face))))
-
 
 (define-minor-mode fd-org-highlights
   "Highlight varous things in org mode."
@@ -83,12 +80,52 @@ mode-line.")
   :custom ((org-image-actual-width 500))
   :hook ((org-mode . fd-org-mode-hook))
   :config
+  (setq org-latex-pdf-process
+        '("latexmk -shell-escape -bibtex -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f")
+        org-cite-global-bibliography
+        (list (concat org-nodes-directory "/bibtex.bib"))
+        org-cite-export-processors '((t . (fd-natbib "unsrt" nil))))
+
+  ;; Define fd-natbib that automatically adds the natbib bibliography
+  ;; at the end of the document.
+  (require 'oc)
+  (require 'oc-natbib)
+  (let ((natbib (org-cite--get-processor 'natbib)))
+    (org-cite-register-processor 'fd-natbib
+      :export-bibliography (org-cite-processor-export-bibliography natbib)
+      :export-citation (org-cite-processor-export-citation natbib)
+      :export-finalizer #'fd-natbib-cite-processor-finalize
+      :cite-styles (org-cite-processor-cite-styles natbib)))
   (org-wc-mode 1)
   (yas-minor-mode 1)
-  (add-to-list 'org-file-apps '("\\.pdf\\'" . "open")))
+  (add-to-list 'org-file-apps '("\\.pdf\\'" . emacs)))
 
 
-(use-package org-ref)
+(defun fd-natbib-cite-processor-finalize (output citation-keys bib-files bib-style back-end info)
+  (let* ((natbib (org-cite--get-processor 'natbib))
+         (out (funcall (org-cite-processor-export-finalizer natbib)
+                       output citation-keys bib-files bib-style back-end info)))
+    (with-temp-buffer
+      (save-match-data
+        (save-excursion (insert out))
+        (unless (save-excursion (re-search-forward "^[[:space:]]*\\bibliograpy" nil  t))
+          (when (search-forward "\\end{document}" nil t)
+            (let ((bib-str (funcall (org-cite-processor-export-bibliography natbib)
+                                    citation-keys bib-files bib-style nil back-end info)))
+              (goto-char (match-beginning 0))
+              (insert bib-str))))
+        (buffer-string)))))
+
+(use-package pdf-tools
+  :config
+  (pdf-tools-install)
+  (setq pdf-view-use-scaling t))
+
+(use-package org-ref
+  :after org
+  :config
+  (setq org-ref-default-bibliography
+        (list (concat org-nodes-directory "/bibtex.bib"))))
 
 ;; Org roam
 
@@ -96,11 +133,12 @@ mode-line.")
 (use-package org-download
   :after org-roam)
 
-(use-package org-roam-bibtex
+
+(use-package ivy-bibtex
   :after org-roam
   :config
-  (require 'org-ref))
-
+  (setq bibtex-completion-bibliography
+      (list (concat org-nodes-directory "/bibtex.bib"))))
 
 (use-package org-roam-bibtex
   :after org-roam
@@ -126,32 +164,73 @@ mode-line.")
     (clear-lsp-major-modes 'digestif)
     (clear-lsp-major-modes 'texlab)))
 
-(defun org-roam-setup-captures ()
-  (("d" "default" plain "%?" :if-new
-    (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}")
-    :unnarrowed t)
-
-   ("t" "A note about the fluidb thesis." ; Description
-    plain ; the kind
-    "%?"  ; the template (just put the cursor in an empty file)
-    :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                       "#+title: ${title}\n#+filetags: thesis")
-    :jump-to-captured t
-    :unnoarrowed t)))
+(require 'fd-thesis)
 (use-package org-roam
   :ensure t
   :init
   (setq org-roam-v2-ack t)
-  :custom ((org-roam-directory "~/RoamNotes")
+  :custom ((org-roam-directory org-nodes-directory)
            (org-return-follows-link t)
            (org-roam-completion-everywhere t))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n i" . org-roam-node-insert)
          :map org-mode-map
-         ("C-M-i" . completion-at-point))
+         ("C-x [" . org-roam-visit-parent-node))
   :bind-keymap ("C-c n d" . org-roam-dailies-map)
   :config
+  (setup-article)
   (require 'org-roam-dailies) ;; Ensure the keymap is available
   (org-roam-db-autosync-mode)
   (org-roam-setup))
+
+
+(defun org-roam-select-node (backlinks)
+  "From a list of backlinks get the node to visit."
+  (cond
+   ((= (length backlinks) 1) (org-roam-backlink-source-node (car backlinks)))
+   ((= (length backlinks) 0) (error "No backlinks"))
+   (t (let* ((nodes (mapcar #'(lambda (b) (org-roam-node-read--to-candidate
+                                       (org-roam-backlink-source-node
+                             b)))
+                            backlinks))
+             (node (completing-read
+                    "Backlink to follow: "
+                    (lambda (string pred action)
+                     (if (eq action 'metadata)
+                         '(metadata
+                           (annotation-function . (lambda (title)
+                                                    (funcall org-roam-node-annotation-function
+                                                             (get-text-property 0 'node title))))
+                           (category . org-roam-node))
+                       (complete-with-action action nodes string pred)))
+                    nil t)))
+        (cdr (assoc node nodes))))))
+
+
+(defun org-roam-visit-parent-node ()
+  (interactive)
+  (require 'org-roam-node)
+  (org-roam-node-visit
+   (org-roam-select-node
+    (org-roam-backlinks-get
+     (org-roam-node-at-point 'assert)))))
+
+(use-package org-transclusion
+  :ensure t
+  :after org
+  :straight (org-transclusion
+             :type git :flavor melpa
+             :host github :repo "nobiot/org-transclusion"
+             :fork (:host github :repo "fakedrake/org-transclusion"
+                          :branch "title-as-heading"))
+ :bind
+  (:map org-transclusion-mode-map
+        ("C-c i" . org-transclusion-add)
+        ("C-c C-i" . org-transclusion-add-all)
+   :map org-mode-map
+   ("C-c C-i" . org-transclusion-add-all))
+  :custom ((org-transclusion-include-first-section t)
+           (org-transclusion-enable-recursive-add t))
+  :config
+  (require 'org-transclusion ))

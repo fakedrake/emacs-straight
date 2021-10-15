@@ -89,6 +89,8 @@
      (swiper-all . swiper--all-format-function)
      (swiper-multi . swiper--all-format-function)
      (t . ivy-format-function-line)))
+ '(org-agenda-files
+   '("~/RoamNotes/20211011013112-introduction_to_operators.org" "/Users/cperivol/RoamNotes/20210916203438-antisthenis_cap.org" "/Users/cperivol/RoamNotes/20211010155450-antisthenis_processes.org" "/Users/cperivol/RoamNotes/20210914020552-mealy_arrows.org" "/Users/cperivol/RoamNotes/20210916203941-antisthenis_computation_model.org" "/Users/cperivol/RoamNotes/20211006012815-functor.org" "/Users/cperivol/RoamNotes/20211006012937-background_monad.org" "/Users/cperivol/RoamNotes/20211006012246-antisthenis_introduction.org" "/Users/cperivol/RoamNotes/20210804182441-antisthenis.org" "/Users/cperivol/RoamNotes/20210916121156-antisthenis_cmds_functor.org" "/Users/cperivol/RoamNotes/20210918182241-antisthenis_zipper.org" "/Users/cperivol/RoamNotes/20211003222152-normal_get_cost.org" "/Users/cperivol/RoamNotes/20211006013406-mealy_and_moore_arrows.org" "/Users/cperivol/RoamNotes/20211006213915-codegen_background.org" "/Users/cperivol/RoamNotes/20211006214750-primary_data_serialization_bamify.org" "/Users/cperivol/RoamNotes/20210916204302-antisthenis_cyclical_machines.org" "/Users/cperivol/RoamNotes/20210829140013-defaulting_functor.org"))
  '(safe-local-variable-values
    '((TeX-auto-local . "/Users/cperivol/Projects/phd/thesis/style")
      (TeX-style-local . "/Users/cperivol/Projects/phd/thesis/style")

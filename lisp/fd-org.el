@@ -42,7 +42,8 @@ mode-line.")
             (org-count-words (point-min) (point-max)))))
 
 (defun fd-org-mode-hook ()
-  (yas-minor-mode)
+  (yas-minor-mode 1)
+  (visual-line-mode 1)
   (org-wc-mode 1)
   (setq-local electric-pair-pairs
               (append '((?* . ?*) (?/ . ?/) (?~ . ?~)) electric-pair-pairs))
@@ -80,7 +81,8 @@ mode-line.")
   :custom ((org-image-actual-width 500))
   :hook ((org-mode . fd-org-mode-hook))
   :config
-  (setq org-latex-pdf-process
+  (setq org-latex-compiler "lualatex"
+        org-latex-pdf-process
         '("latexmk -shell-escape -bibtex -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f")
         org-cite-global-bibliography
         (list (concat org-nodes-directory "/bibtex.bib"))
@@ -132,7 +134,6 @@ mode-line.")
 ;; Use org-download-clipboard to paste an image.
 (use-package org-download
   :after org-roam)
-
 
 (use-package ivy-bibtex
   :after org-roam
@@ -234,3 +235,22 @@ mode-line.")
            (org-transclusion-enable-recursive-add t))
   :config
   (require 'org-transclusion ))
+
+
+;; brew install --build-from-source languagetool
+(use-package langtool
+  :commands (langtool-check
+             langtool-check-done
+             langtool-switch-default-language
+             langtool-show-message-at-point
+             langtool-correct-buffer)
+  :init
+  (setq langtool-default-language "en-US"
+        langtool-mother-tongue "en-US"
+        langtool-language-tool-jar "/usr/local/Cellar/languagetool/5.2.3/libexec/languagetool-commandline.jar"))
+
+(use-package langtool-ignore-fonts
+  :config
+  (add-hook 'LaTeX-mode-hook 'langtool-ignore-fonts-minor-mode)
+  (add-hook 'org-mode-hook 'langtool-ignore-fonts-minor-mode)
+  (langtool-ignore-fonts-add 'markdown-mode '(markdown-code-face)))

@@ -1,15 +1,53 @@
-(defconst fd-theorem-header
+(defcustom fd-latex-header
   "\\usepackage{amsthm}
 \\newtheorem{definition}{Definition}[section]
 \\newtheorem{theorem}{Theorem}
-")
+\\usepackage{fontspec}
+\\newcommand{\\fntsize}{9}
+\\setmonofont{FiraCode}[
+  UprightFeatures={SizeFeatures={Size=\\fntsize}},
+  ItalicFeatures={SizeFeatures={Size=\\fntsize}},
+  BoldFeatures={SizeFeatures={Size=\\fntsize}},
+  BoldItalicFeatures={SizeFeatures={Size=\\fntsize}}]
+"
+  "The latex header")
+
+(defcustom fd-latex-extra-commands
+  "\\usepackage{cancel}
+\\newcommand{\\lsemi}{\\ltimes}
+\\newcommand{\\rsemi}{\\rtimes}
+\\newcommand{\\lnsemi}{\\cancel\\ltimes}
+\\newcommand{\\rnsemi}{\\cancel\\rtimes}
+"
+  "some extra commands")
+
 
 (defun setup-article ()
   (setq org-latex-default-class "fd-article")
   (setq org-latex-default-figure-position "H")
+  (setq org-format-latex-header
+        (concat "\\documentclass{article}
+\\usepackage[usenames]{color}
+\[PACKAGES]
+\[DEFAULT-PACKAGES]
+\\pagestyle{empty}             % do not remove
+% The settings below are copied from fullpage.sty
+\\setlength{\\textwidth}{\\paperwidth}
+\\addtolength{\\textwidth}{-3cm}
+\\setlength{\\oddsidemargin}{1.5cm}
+\\addtolength{\\oddsidemargin}{-2.54cm}
+\\setlength{\\evensidemargin}{\\oddsidemargin}
+\\setlength{\\textheight}{\\paperheight}
+\\addtolength{\\textheight}{-\\headheight}
+\\addtolength{\\textheight}{-\\headsep}
+\\addtolength{\\textheight}{-\\footskip}
+\\addtolength{\\textheight}{-3cm}
+\\setlength{\\topmargin}{1.5cm}
+\\addtolength{\\topmargin}{-2.54cm}"
+                fd-latex-extra-commands))
 
   (require 'ob-latex)
-  ; (setq org-latex-packages-alist '(("" "amsthm")))
+                                        ; (setq org-latex-packages-alist '(("" "amsthm")))
   ;; XXX: ensure the fonts are all there.
   ;; For arch that would be:
   ;; pacman -S ttf-dejavu ttf-freefont.
@@ -28,22 +66,26 @@
 		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
   (add-to-list 'org-latex-classes
 	       `("fd-article"
-                ,(concat "\\documentclass[11pt]{article}\n" fd-theorem-header)
-                ("\\section{%s}" . "\\section*{%s}")
-                ("\\subsection{%s}" . "\\subsection*{%s}")
-                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                ("\\paragraph{%s}" . "\\paragraph*{%s}")
-     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+                 ,(concat "\\documentclass[11pt]{article}\n" fd-latex-header)
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
   (add-to-list 'org-latex-packages-alist
                '("" "tikz" t))
- ; (add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t)
+  ;; Long captions are horrible to write:
+  ;; https://emacs.stackexchange.com/questions/20720/figures-with-multiline-captions-in-org-mode
   (setq org-export-filter-link-functions '(fd-link-filter))
- (org-babel-do-load-languages
-  'org-babel-load-languages
-  '((latex . t)))
- (add-to-list 'org-latex-packages-alist '("" "minted"))
- (setq org-latex-listings 'minted))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((latex . t)))
+  (setq latex-minted-options '("breaklines"))
+
+  (add-to-list 'org-latex-packages-alist '("" "minted"))
+  (add-to-list 'org-latex-packages-alist '("" "cancel"))
+  (setq org-latex-listings 'minted))
 
 (use-package graphviz-dot-mode)
 
@@ -61,7 +103,7 @@
   (setq org-transclusion-exclude-elements nil)
   (add-to-list 'org-src-lang-modes '("dot2tex" . graphviz-dot)))
 
-; (org-export-filter-src-block-functions)
+                                        ; (org-export-filter-src-block-functions)
 
 (defun fd-link-filter (data-str backend-sym info)
   (save-match-data

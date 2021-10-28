@@ -1,0 +1,10 @@
+# name: Tikz figure
+# key: <tikz
+# --
+#+NAME: fig:$1
+#+CAPTION: $2
+#+BEGIN_SRC latex
+  \begin{tikzpicture}
+    $0
+  \end{tikzpicture}
+#+END_SRC

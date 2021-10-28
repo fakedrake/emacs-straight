@@ -2,7 +2,7 @@
 # key: <h
 # binding: C-c y h
 # --
-#+NAME: $1
+#+NAME: lst:$1
 #+CAPTION: $2
 #+BEGIN_SRC haskell
   $0

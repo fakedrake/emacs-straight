@@ -4,11 +4,7 @@
 \\newtheorem{theorem}{Theorem}
 \\usepackage{fontspec}
 \\newcommand{\\fntsize}{9}
-\\setmonofont{FiraCode}[
-  UprightFeatures={SizeFeatures={Size=\\fntsize}},
-  ItalicFeatures={SizeFeatures={Size=\\fntsize}},
-  BoldFeatures={SizeFeatures={Size=\\fntsize}},
-  BoldItalicFeatures={SizeFeatures={Size=\\fntsize}}]
+\\setmonofont{FiraCode}[Scale=0.8]
 "
   "The latex header")
 
@@ -43,8 +39,7 @@
 \\addtolength{\\textheight}{-\\footskip}
 \\addtolength{\\textheight}{-3cm}
 \\setlength{\\topmargin}{1.5cm}
-\\addtolength{\\topmargin}{-2.54cm}"
-                fd-latex-extra-commands))
+\\addtolength{\\topmargin}{-2.54cm}\n"))
 
   (require 'ob-latex)
                                         ; (setq org-latex-packages-alist '(("" "amsthm")))
@@ -66,7 +61,9 @@
 		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
   (add-to-list 'org-latex-classes
 	       `("fd-article"
-                 ,(concat "\\documentclass[11pt]{article}\n" fd-latex-header)
+                 ,(concat "\\documentclass[11pt]{article}\n"
+                          fd-latex-header
+                          fd-latex-extra-commands)
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")

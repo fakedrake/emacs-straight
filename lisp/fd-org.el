@@ -118,10 +118,6 @@ mode-line.")
               (insert bib-str))))
         (buffer-string)))))
 
-(use-package pdf-tools
-  :config
-  (pdf-tools-install)
-  (setq pdf-view-use-scaling t))
 
 (use-package org-ref
   :after org
@@ -144,8 +140,21 @@ mode-line.")
 (use-package org-roam-bibtex
   :after org-roam
   :config
-  (require 'org-ref))
+  (setq org-roam-capture-templates
+        '(("r" "bibliography reference" plain
+          (file "/Users/cperivol/.emacs.d/roam-capture-templates/bibliography.org")
+          :target
+          (file+head "references/${orb-get-citekey}.org" "#+title: REF: ${title}\n")
+          :unnarrowed t)
+         ("d" "default" plain "%?" :target
+          (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+          :unnarrowed t)))
+  (require 'org-ref)
+  (org-roam-bibtex-mode 1))
 
+(defun orb-get-citekey (node)
+  "the-citekey"
+  (cdr (assq 'citekey (org-roam-node-properties node))))
 
 (defun ltex-enable ()
   (require 'lsp-ltex)

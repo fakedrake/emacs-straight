@@ -252,3 +252,6 @@ parent."
          ((looking-at end-rx) (setq offset (- offset 2)) (indent-line-to offset))
          (t (indent-line-to offset)))
         (forward-line)))))
+
+(setq print-length nil
+      print-level nil)

@@ -71,11 +71,23 @@ also `LaTeX-find-matching-begin' and `LaTeX-find-matching-end'."
   ;; Search for the end of the \begin{...}
   (search-forward "}"))
 
+(defun fd-auctex-code-indent-line ()
+  "Do not indent line when in code"
+  (interactive)
+  (let ((env (LaTeX-current-environment)))
+    (if (and env
+             (assq (intern env) LaTeX-code-environments)
+             (not (looking-at " *\\end *{ *\\([A-Za-z*]+\\) *}")))
+        'noindent
+      (LaTeX-indent-line))))
+
 ;;;###autoload
 (defcustom LaTeX-code-environments
   '((luacode . lua-mode)
     (luacode* . lua-mode)
-    (haskell . haskell-mode))
+    (pycode . python-mode)
+    (haskellcode . haskell-mode)
+    (sqlcode . sql-mode))
   "An alist of symbols for envs and corresponding modes"
   :group 'LaTeX-code
   :type '(alist :key-type symbol :value-type symbol))
@@ -98,12 +110,44 @@ also `LaTeX-find-matching-begin' and `LaTeX-find-matching-end'."
         (switch-to-buffer-other-window code-buffer)
         (funcall mode)
         (auctex-code-mode)
-        (insert this-code)
+        (insert (concat (string-trim-right this-code) "\n"))
+        (LaTeX-edit-code--unindent-buffer)
+        (beginning-of-buffer)
+        (while (and (< (point) (- (point-max) 1)) (looking-at " *$"))
+          (delete-region (point) (1+ (match-end 0))))
         ;; Record some buffer-local variables
         (setq-local LaTeX-edit-code-parent-buffer code-parent-buffer)
         (setq-local LaTeX-edit-code-parent-buffer-point code-where-edit-started))
     (message "Not in a known code environment.")))
 
+(defun LaTeX-edit-code--unindent-buffer ()
+  (let ((min-indent))
+    (save-excursion
+      (goto-char (point-min))
+      (while (< (point) (point-max))
+        (unless (looking-at " *$")
+          (setq min-indent
+                (if min-indent
+                    (min min-indent (current-indentation))
+                  (current-indentation))))
+        (forward-line))
+      (when min-indent
+        (goto-char (point-min))
+        (while (< (point) (point-max))
+          (beginning-of-line)
+          (if (looking-at " *$")
+              (delete-region (point) (match-end 0))
+            (delete-char min-indent))
+          (forward-line))))))
+
+(defun LaTeX-edit-code--indent-string (str)
+  "Indent a string 2 spaces deeper than the the innermost environment"
+  (let ((off (+ 2 (save-excursion
+                    (LaTeX-find-matching-begin)
+                    (column-at (point))))))
+    (concat (mapconcat (lambda (x) (concat (s-repeat off " ") x))
+                       (s-lines str)
+                       "\n"))))
 
 (defun LaTeX-edit-code-finish ()
   "Dump the contents of the current buffer into the
@@ -121,23 +165,25 @@ original one.  Remember, you can always `undo' your changes.  See
   ;; `LaTeX-edit-code-start'
   (if (bufferp LaTeX-edit-code-parent-buffer)
       ;; Grab the code
-      (let* ((the-code (progn (widen)
+      (let* ((buf LaTeX-edit-code-parent-buffer)
+             (pt LaTeX-edit-code-parent-buffer-point)
+             (the-code (progn (widen)
                               (LaTeX-edit-code--trim
                                (buffer-substring (point-min)
                                                  (point-max))))))
         ;; Kill the buffer
         (kill-buffer-and-window)
         ;; and switch to its parent
-        (switch-to-buffer LaTeX-edit-code-parent-buffer)
+        (switch-to-buffer buf)
         (save-excursion
           ;; Mark the current environment
           (LaTeX-mark-environment-contents)
           ;; and replace it
           (delete-region (point) (mark))
           ;; with the code
-          (insert "\n" the-code "\n"))
+          (insert "\n" (LaTeX-edit-code--indent-string the-code) "\n"))
         ;; and return point to its rightful place
-        (goto-char LaTeX-edit-code-parent-buffer-point))
+        (goto-char pt))
     (message "%s  %s"
              "Something went wrong."
              "Am I *really* in a buffer created with `LaTeX-edit-code-finish'?")))

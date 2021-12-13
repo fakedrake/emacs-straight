@@ -121,6 +121,7 @@ mode-line.")
 
 (use-package org-ref
   :after org
+  :bind (:map org-mode-map ("C-c ]" . org-ref-insert-link))
   :config
   (setq org-ref-default-bibliography
         (list (concat org-nodes-directory "/bibtex.bib"))))
@@ -176,7 +177,11 @@ mode-line.")
 
 (require 'fd-thesis)
 (use-package org-roam
-  :ensure t
+  :straight (org-roam
+             :type git :flavor melpa
+             :host github :repo "org-roam/org-roam"
+             :fork (:host github :repo "fakedrake/org-mode"
+                          :branch "master"))
   :init
   (setq org-roam-v2-ack t)
   :custom ((org-roam-directory org-nodes-directory)
@@ -200,9 +205,10 @@ mode-line.")
   (cond
    ((= (length backlinks) 1) (org-roam-backlink-source-node (car backlinks)))
    ((= (length backlinks) 0) (error "No backlinks"))
-   (t (let* ((nodes (mapcar #'(lambda (b) (org-roam-node-read--to-candidate
-                                       (org-roam-backlink-source-node
-                             b)))
+   (t (let* ((template (org-roam-node--process-display-format org-roam-node-display-template))
+             (nodes (mapcar #'(lambda (b) (org-roam-node-read--to-candidate
+                                       (org-roam-backlink-source-node b)
+                                       template))
                             backlinks))
              (node (completing-read
                     "Backlink to follow: "

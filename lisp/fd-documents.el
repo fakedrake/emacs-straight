@@ -10,19 +10,24 @@
   ;; commands will work properly.
   ; We always have graphicx, luaextra and amsmath even if they are not
   ; in the current file
-  (TeX-run-style-hooks "article" "luaextra" "graphics" "amsmath")
-
+  (TeX-run-style-hooks "article" "luaextra" "graphics" "amsmath" "minted")
   ;; Set the project root
   (add-to-list 'TeX-tree-roots (expand-file-name (project-root (project-current t))))
-
+  (TeX-source-correlate-mode 1)
   ;; Inline code
-  (font-latex-add-keywords '(("code" "{")) 'italic-command)
-  (font-latex-add-keywords '(("code" "{")) 'variable)
+  (loop
+   for lang in '("code" "hask" "sql" "cpp" "py")
+   do
+   (font-latex-add-keywords `((,lang "{")) 'italic-command)
+   (font-latex-add-keywords `((,lang "{")) 'variable))
 
+  (add-to-list 'LaTeX-verbatim-environments "minted")
+  (add-to-list 'LaTeX-verbatim-environments "haskellcode")
+  (add-to-list 'LaTeX-verbatim-environments "pycode")
+  (add-to-list 'LaTeX-verbatim-environments "sqlcode")
+  (add-to-list 'LaTeX-verbatim-environments "cppcode")
   ; Use latexmk
-  (setq TeX-command-default "latexmk")
-  (push '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t :help "Run latexmk on file")
-        TeX-command-list))
+  (set (make-local-variable 'indent-line-function) #'fd-auctex-code-indent-line))
 
 (use-package lua-mode)
 
@@ -43,6 +48,20 @@
   (setq-default TeX-engine 'luatex)
   (setq TeX-PDF-mode t)
   (require 'fd-auctex-code)
+  (setq-default TeX-master nil)
+  (setq TeX-command-default "latexmk")
+  (push '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t :help "Run latexmk on file")
+        TeX-command-list)
+  (push '("build.sh" "./build.sh" TeX-run-TeX nil t :help "Run a build script")
+        TeX-command-list)
+
+  ;; Use pdf-tools to open PDF files
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+        TeX-source-correlate-start-server t)
+
+  ;; Update PDF buffers after successful LaTeX runs
+  (add-hook 'TeX-after-compilation-finished-functions
+            #'TeX-revert-document-buffer)
 
   (setq TeX-parse-self t) ; Enable parse on load.
   (setq TeX-auto-save t) ; Enable parse on save.

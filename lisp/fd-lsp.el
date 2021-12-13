@@ -9,11 +9,13 @@
 
 (use-package lsp-ui
   :config
+  (setq lsp-enable-folding nil)
+  (setq lsp-enable-snippet nil)
+  ; (setq lsp-ui-doc-enable Nil)
+  (setq lsp-lens-enable nil)
   (setq lsp-ui-doc-enable nil)
   (setq lsp-ui-sideline-diagnostic-max-lines 3))
 
-;; optionally
-(use-package lsp-ui :commands lsp-ui-mode)
 (use-package lsp-haskell)
 
 ; cmake -H. -BDebug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=YES

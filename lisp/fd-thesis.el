@@ -22,7 +22,7 @@
   (setq org-latex-default-class "fd-article")
   (setq org-latex-default-figure-position "H")
   (setq org-format-latex-header
-        (concat "\\documentclass{article}
+        (concat "\\documentclass[preview]{standalone}
 \\usepackage[usenames]{color}
 \[PACKAGES]
 \[DEFAULT-PACKAGES]

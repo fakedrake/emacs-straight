@@ -22,9 +22,9 @@
         (when (buffer-file-name (current-buffer))
           (file-name-directory (buffer-file-name (current-buffer)))))
   ;; Make sure we are switching branches on the same tree.
+
   (setq-local fluidb-plan-dir-local fluidb-plan-dir)
-  (read-only-mode)
-  (setq font-lock-defaults '(fluidb-font-lock)))
+  (read-only-mode))
 
 
 (defmacro let-subst (bindings exp)
@@ -37,7 +37,7 @@
   (pcase exp
     (`(list-of ,exp1)
      `(: "[" ,(preprocess-regex exp1) (0+ "," ,(preprocess-regex exp1)) "]"))
-    ('node '(: "<" (1+ digit) ">"))
+    ('node '(: "N" (1+ digit)))
     (`(,x . ,xs) `(,(preprocess-regex x) . ,(preprocess-regex xs)))
     (_ exp)))
 
@@ -70,7 +70,7 @@
   "Materialized"
   :group 'font-lock-faces)
 
-(setq fluidb-font-lock
+(setq fluidb-branch-keywords
       `((,(fluidb-rx (group "Materializing dependencies: ")
                      (group (list-of node)))
          (1 font-lock-dependencies-face)
@@ -83,6 +83,8 @@
          (3 font-lock-mat-state-face))
         (,(fluidb-rx "[NEW STUFF]") 0 font-lock-newstuff-face)
         (,(fluidb-rx node) 0 font-lock-noderef-face)))
+
+(font-lock-add-keywords 'fluidb-branch-mode fluidb-branch-keywords)
 
 (defun fluidb-jump-to-branch (branch &optional plan root-dir)
   "Jump to branch BRANCH of PLAN. If no PLAN is provided then
@@ -304,3 +306,5 @@ branchNUM1.txt where NUM1 = NUM0 - 1"
   (read-only-mode))
 
 (add-to-list 'auto-mode-alist '("\\.profiterole.txt\\'" . profiterole-mode))
+
+(require 'fd-fluidb-comint)

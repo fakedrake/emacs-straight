@@ -1,0 +1,6 @@
+# name: A theorem
+# key: <t
+# --
+#+begin_theorem
+  $0
+#+end_theorem

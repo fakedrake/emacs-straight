@@ -1,0 +1,9 @@
+# name: Org mode haskell source
+# key: <h
+# binding: C-c y h
+# --
+#+NAME: lst:$1
+#+CAPTION: $2
+#+BEGIN_SRC haskell
+  $0
+#+END_SRC

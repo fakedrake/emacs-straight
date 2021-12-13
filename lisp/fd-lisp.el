@@ -19,3 +19,8 @@
 (use-package geiser-chez)
 (use-package geiser-chicken)
 (add-hook 'emacs-lisp-mode-hook 'fd-elisp-hooks)
+
+(use-package sly
+  :config
+  (setq inferior-lisp-program "sbcl"))
+(use-package racket-mode)

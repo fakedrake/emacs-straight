@@ -234,3 +234,6 @@ parent."
 
 (rx-define path-ext-linum-maybe-col (ext grp-path grp-linum grp-col)
   (: (path-ext-linum ext grp-path grp-linum) (? ?: (group-n grp-col (+ (in digit))))))
+
+(require 'tramp)
+(add-to-list 'tramp-remote-path 'tramp-own-remote-path)

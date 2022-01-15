@@ -257,3 +257,49 @@ parent."
 
 (setq print-length nil
       print-level nil)
+
+(defun expand-file-name-remote (file)
+  "A tramp-friendly version of expand-file-name.  Expand file
+relative to the remote part of default-directory."
+  (let ((file (expand-file-name file))
+        (dir-remote (file-remote-p default-directory)))
+    (if (file-remote-p file)
+        ;; if file is already remote, return it
+        file
+      ;; otherwise prepend the remote part (if any) of default-directory
+      (concat dir-remote file))))
+
+(defun around-ad-executable-find (orig-fn cmd &optional is-remote)
+  (let ((remote-cmd (if is-remote (expand-file-name-remote cmd) cmd)))
+    (if (file-executable-p remote-cmd)
+        cmd
+      (funcall orig-fn cmd is-remote))))
+(advice-add 'executable-find :around 'around-ad-executable-find)
+
+;; Galeon is this old browser that usded to be supported by browse-url
+;; but now it was discontinued and helm-net has not caught up to this
+;; deprecation.
+(defmacro browse-url-define-browser (deprecated-browser)
+  (message "defining browser %s" deprecated-browser)
+  `(progn
+     (defcustom ,(intern (format "browse-url-%s-program" deprecated-browser)) ,deprecated-browser
+       "The name by which to invoke Galeon."
+       :type 'string)
+
+     (defcustom ,(intern (format "browse-url-%s-arguments" deprecated-browser)) nil
+       "A list of strings to pass to Galeon as arguments."
+       :type '(repeat (string :tag "Argument")))
+
+     (defcustom ,(intern (format "browse-url-%s-startup-arguments" deprecated-browser))
+       browse-url-galeon-arguments
+       "A list of strings to pass to Galeon when it starts up.
+Defaults to the value of `browse-url-galeon-arguments' at the time
+`browse-url' is loaded."
+       :type '(repeat (string :tag "Argument")))))
+
+(defmacro define-deprecated-browsers ()
+  `(progn
+     ,@(cl-loop for depr-browser in '("galeon" "mozilla" "netscape")
+                collect `(browse-url-define-browser ,depr-browser))))
+
+(define-deprecated-browsers)

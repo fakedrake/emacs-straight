@@ -1,3 +1,4 @@
+(use-package flycheck)
 (use-package haskell-mode
   :after (company-mode)
   :hook ((haskell-mode . fd-haskell-mode-hook)))
@@ -32,6 +33,7 @@
 (use-package fd-haskell
   :straight nil
   :load-path "local-packages/fd-haskell"
+  :after (flycheck)
   :config
   ;; :straight (fd-haskell :type git :host github :repo "fakedrake/fd-haskell"
   ;;                       :files (:defaults "snippets"))

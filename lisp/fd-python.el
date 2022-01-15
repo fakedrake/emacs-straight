@@ -69,7 +69,7 @@
   (jedi:use-shortcuts t))
 
 (use-package python
-  :mode ("\\.py\\'" . python-mode)
+  :mode (("\\.py\\'" . python-mode) ("Sconscript" . python-mode))
   :interpreter ("python" . python-mode)
   :bind (:map python-mode-map
               ("M-." . jedi:goto-definition)

@@ -85,36 +85,57 @@
 (global-display-line-numbers-mode 1)	; add line numbers on the left
 (show-paren-mode t)
 
-(use-package naquadah-theme
-  :demand t
-  :hook '((find-file . add-mode-line-dirtrack)
-          (buffer-list-update-hook . highlight-selected-window))
+
+(use-package doom-themes
+  :ensure t
   :config
-  (load-theme 'naquadah t)
-  (let ((comment "IndianRed2"))
-    (custom-theme-set-faces
-     'naquadah
-     `(default ((t (:family "Fira Code" :background "#262B2C" :height 95))))
-     `(mode-line ((t (:height 1.1 :background "gray30"))))
-     `(highlight ((t (:background nil :underline t :weight bold))))
-     `(minibuffer-prompt ((t (:foreground "orange1"))))
-     `(region ((t (:background "gray35"))))
-     `(hl-line ((t (:background "gray25"))))
-     `(linum ((t (:inherit default :background "#0c191C" :foreground "gray50"))))
-     `(haskell-debug-newline-face ((t (:inherit linum))))
-     `(haskell-debug-trace-number-face ((t (:inherit linum))))
-     `(comint-highlight-prompt ((t (:inherit font-lock-function-name-face))))
-     ;; Development
-     `(font-lock-comment-face ((t (:foreground ,comment))))
-     `(font-lock-function-name-face ((t (:foreground "orange1" :bold t))))
-     `(font-lock-doc-face ((t (:foreground ,comment))))
-     `(font-lock-doc-string-face ((t (:foreground ,comment))))
-     `(link ((t (:foreground  "#729fcf" :underline t))))
-     `(highlight ((t (:background nil :underline t :weight bold))))
-     `(highlight-symbol-face ((t (:underline t))))))
-  (enable-theme 'naquadah)
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t
+        doom-spacegrey-brighter-comments t) ; if nil, italics is universally disabled
+  (load-theme 'doom-spacegrey t)
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
   (global-hl-line-mode 1)
-  (message "Enabled theme"))
+  (doom-themes-org-config))
+
+;; (use-package naquadah-theme
+;;   :demand t
+;;   :hook '((find-file . add-mode-line-dirtrack)
+;;           (buffer-list-update-hook . highlight-selected-window))
+;;   :config
+;;   (load-theme 'naquadah t)
+;;   (let ((comment "IndianRed2"))
+;;     (custom-theme-set-faces
+;;      'naquadah
+;;      `(default ((t (:family "Fira Code" :background "#262B2C" :height 95))))
+;;      `(mode-line ((t (:height 1.1 :background "gray30"))))
+;;      `(highlight ((t (:background nil :underline t :weight bold))))
+;;      `(minibuffer-prompt ((t (:foreground "orange1"))))
+;;      `(region ((t (:background "gray35"))))
+;;      `(hl-line ((t (:background "gray25"))))
+;;      `(linum ((t (:inherit default :background "#0c191C" :foreground "gray50"))))
+;;      `(haskell-debug-newline-face ((t (:inherit linum))))
+;;      `(haskell-debug-trace-number-face ((t (:inherit linum))))
+;;      `(comint-highlight-prompt ((t (:inherit font-lock-function-name-face))))
+;;      ;; Development
+;;      `(font-lock-comment-face ((t (:foreground ,comment))))
+;;      `(font-lock-function-name-face ((t (:foreground "orange1" :bold t))))
+;;      `(font-lock-doc-face ((t (:foreground ,comment))))
+;;      `(font-lock-doc-string-face ((t (:foreground ,comment))))
+;;      `(link ((t (:foreground  "#729fcf" :underline t))))
+;;      `(highlight ((t (:background nil :underline t :weight bold))))
+;;      `(highlight-symbol-face ((t (:underline t))))))
+;;   (enable-theme 'naquadah)
+;;   (global-hl-line-mode 1)
+;;   (message "Enabled theme"))
 (setq-default cursor-type 'box)
 (setq-default
  frame-title-format

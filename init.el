@@ -70,6 +70,7 @@
 (init-require 'fd-factor)
 (init-require 'fd-yasnippet)
 (init-require 'fd-fluidb)
+(init-require 'fd-racket)
 (init-require 'fd-visual)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

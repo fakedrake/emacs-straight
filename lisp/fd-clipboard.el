@@ -1,8 +1,10 @@
 ;; CLIPBOARD
 (require 'simple)
-(setq interprogram-paste-function 'x-cut-buffer-or-selection-value
-      select-enable-clipboard t
-      x-select-enable-clipboard t)
+
+(unless (eq system-type 'windows-nt)
+  (setq interprogram-paste-function 'x-cut-buffer-or-selection-value
+        select-enable-clipboard t
+        x-select-enable-clipboard t))
 
 (defun clipboard-contents-normal (filename is-directory line-info)
   (let ((linum-sep (if github-prefix "#L" ":"))

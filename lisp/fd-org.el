@@ -175,7 +175,7 @@ mode-line.")
     (clear-lsp-major-modes 'digestif)
     (clear-lsp-major-modes 'texlab)))
 
-(require 'fd-thesis)
+; (require 'fd-thesis)
 (use-package org-roam
   :straight (org-roam
              :type git :flavor melpa

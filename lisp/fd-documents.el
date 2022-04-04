@@ -4,7 +4,6 @@
   :config
   (add-to-list 'writegood-weasel-words "actionable"))
 
-
 (defun fd-tex-hook ()
   ;; REMEMBER TO SET TeX-master in .dir-locals.el so that the latex
   ;; commands will work properly.

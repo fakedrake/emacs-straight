@@ -1,5 +1,30 @@
 (setq org-nodes-directory (expand-file-name "~/RoamNotes"))
 
+(use-package org-roam
+  ;; :straight (org-roam
+  ;;            :type git :flavor melpa
+  ;;            :host github :repo "org-roam/org-roam"
+  ;;            :fork (:host github :repo "fakedrake/org-roam"
+  ;;                         :branch "master"))
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom ((org-roam-directory org-nodes-directory)
+           (org-return-follows-link t)
+           (org-roam-completion-everywhere t))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-x [" . org-roam-visit-parent-node))
+  :bind-keymap ("C-c n d" . org-roam-dailies-map)
+  :config
+  (require 'org-roam)
+  (require 'org-roam-dailies) ;; Ensure the keymap is available
+  (org-roam-db-autosync-mode)
+  (org-roam-setup)
+  'done)
+
 (defun org-count-words (start end)
   "Count words in region skipping code blocks"
   (let ((words 0))
@@ -71,7 +96,8 @@ mode-line.")
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
-  :bind (:map org-mode-map
+  :bind (("C-c l" . org-store-link)
+         :map org-mode-map
               ("<C-tab>" . yas-expand)
               ("M-j" . 'org-meta-return)
               ("C-c C-j" . 'org-meta-return)
@@ -92,12 +118,12 @@ mode-line.")
   ;; at the end of the document.
   (require 'oc)
   (require 'oc-natbib)
-  (let ((natbib (org-cite--get-processor 'natbib)))
-    (org-cite-register-processor 'fd-natbib
-      :export-bibliography (org-cite-processor-export-bibliography natbib)
-      :export-citation (org-cite-processor-export-citation natbib)
-      :export-finalizer #'fd-natbib-cite-processor-finalize
-      :cite-styles (org-cite-processor-cite-styles natbib)))
+  ;; (let ((natbib (org-cite--get-processor 'natbib)))
+  ;;   (org-cite-register-processor 'fd-natbib
+  ;;     :export-bibliography (org-cite-processor-export-bibliography natbib)
+  ;;     :export-citation (org-cite-processor-export-citation natbib)
+  ;;     :export-finalizer #'fd-natbib-cite-processor-finalize
+  ;;     :cite-styles (org-cite-processor-cite-styles natbib)))
   (org-wc-mode 1)
   (yas-minor-mode 1)
   (add-to-list 'org-file-apps '("\\.pdf\\'" . emacs)))
@@ -176,28 +202,6 @@ mode-line.")
     (clear-lsp-major-modes 'texlab)))
 
 ; (require 'fd-thesis)
-(use-package org-roam
-  :straight (org-roam
-             :type git :flavor melpa
-             :host github :repo "org-roam/org-roam"
-             :fork (:host github :repo "fakedrake/org-mode"
-                          :branch "master"))
-  :init
-  (setq org-roam-v2-ack t)
-  :custom ((org-roam-directory org-nodes-directory)
-           (org-return-follows-link t)
-           (org-roam-completion-everywhere t))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert)
-         :map org-mode-map
-         ("C-x [" . org-roam-visit-parent-node))
-  :bind-keymap ("C-c n d" . org-roam-dailies-map)
-  :config
-  (setup-article)
-  (require 'org-roam-dailies) ;; Ensure the keymap is available
-  (org-roam-db-autosync-mode)
-  (org-roam-setup))
 
 
 (defun org-roam-select-node (backlinks)

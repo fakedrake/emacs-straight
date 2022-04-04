@@ -8,14 +8,20 @@
                      gc-cons-threshold)))
 
 ;; Set the CNTLM proxy
-(setq cntlm-proxy nil)
-(when cntlm-proxy
-  (setenv "HTTPS_PROXY" "http://127.0.0.1:3128")
-  (setenv "HTTP_PROXY" "http://127.0.0.1:3128")
-  (setq url-proxy-services
-	'(("http"     . "127.0.0.1:3128")
-	  ("https"     . "127.0.0.1:3128")
-          ("no_proxy" . "^.*\\.huawei\\.com"))))
+(require 'cl)
+(defun setup-cntlm-proxy--internal (set-or-unset)
+  (cl-flet ((s (v) (when set-or-unset v)))
+    (setenv "HTTPS_PROXY" (s "http://127.0.0.1:3128"))
+    (setenv "HTTP_PROXY" (s "http://127.0.0.1:3128"))
+    (setq url-proxy-services
+	  (s '(("http"     . "127.0.0.1:3128")
+	       ("https"     . "127.0.0.1:3128")
+               ("no_proxy" . "^.*\\.huawei\\.com"))))))
+(defun enable-cntlm-proxy () (interactive) (setup-cntlm-proxy--internal t))
+(defun disable-cntlm-proxy () (interactive) (setup-cntlm-proxy--internal nil))
+
+(enable-cntlm-proxy)
+
 
 (when (eq system-type 'windows-nt)
   (defun add-to-exec-path (path)
@@ -90,3 +96,17 @@
 (init-require 'fd-huawei)
 (init-require 'fd-racket)
 (init-require 'fd-visual)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values
+   '((compile-root . "/plink:semedi-ts-03:/home/christosp/Projects/gmdbv5/")))
+ '(warning-suppress-types '((jedi))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

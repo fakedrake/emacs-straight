@@ -37,3 +37,10 @@ each line."
 (setq narrow-to-defun-include-comments t)
 (setq project-vc-ignores '())
 (add-hook 'shell-mode-hook 'compilation-shell-minor-mode)
+
+(use-package format-all)
+
+(use-package tree-mode)
+(use-package call-graph
+  :after (ivy tree-mode)
+  :straight (call-graph-huawei :type git :flavor melpa :repo "ssh://git@gitlab-uk.rnd.huawei.com:2222/c84174081/call-graph.git"))

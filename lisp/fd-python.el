@@ -78,9 +78,13 @@
   :custom
   ((python-environment-virtualenv '("python3" "-m" "venv"))
    (paragraph-start (concat paragraph-start "\\|\\s-*\"\"\".*$")))
-  :hook (python-mode . jedi:setup)
+  :hook ((python-mode . fd-python-hook))
   :config
   (advice-add 'python-indent-line-function
               :around #'fd-python-indent-line-function))
+
+(defun fd-python-hook ()
+  (jedi:setup)
+  (setq-local indent-tabs-mode nil))
 
 ;;; fd-python.el ends here

@@ -98,7 +98,9 @@ returns non-nil if the function is to be called."
 (defun fd-compilation-root (filename)
   (or (when (boundp 'compile-root) compile-root)
       (fd-project-root filename ".dir-locals.el")
-      (file-name-as-directory filename)))
+      (when (file-accessible-directory-p filename)
+        (file-name-as-directory filename))
+      (file-name-directory filename)))
 
 (defun fd-recompile ()
   (interactive)
@@ -130,11 +132,8 @@ the current directory. Then run compilation."
     (fd-save-compilation
      (or (fd-project-root default-directory ".dir-locals.el") default-directory)
      directory command)
-    (let ((default-directory (fd-normalize-dir directory)))
+    (let ((default-directory directory))
       (fd-recompile))))
-
-(defun fd-normalize-dir (directory)
-  (if (s-ends-with-p "/" directory) directory (concat directory "/")))
 
 (defun fd-trim (c str)
   (apply 'string
@@ -147,16 +146,9 @@ the current directory. Then run compilation."
 (defun fd-trim-internal (c lst)
   (if (and lst (= (car lst) c)) (fd-trim-internal c (cdr lst)) lst))
 
-(defun fd-path-concat (&rest path-fragments)
-  (concat "/"
-          (fd-trim ?/
-                   (mapconcat
-                    (apply-partially 'fd-trim ?/)
-                    path-fragments "/"))))
-
 (setq enable-remote-dir-locals t)
 (defun fd-save-compilation (project-root compilation-root command)
-  (find-file (fd-path-concat project-root ".dir-locals.el"))
+  (find-file (concat (file-name-as-directory project-root) ".dir-locals.el"))
   (save-buffer)
   (add-dir-local-variable nil 'compile-command command)
   (add-dir-local-variable nil 'compile-root compilation-root)

@@ -165,23 +165,13 @@ mode-line.")
   (if-let ((h (gethash client lsp-clients)))
       (setf (lsp--client-major-modes h) '())))
 
-(use-package lsp-ltex
-  :ensure t
-  :config
-  (with-eval-after-load 'lsp-ltex
-    (setq lsp-ltex-latex-commands `((,(intern "\\code{}") . "dummy")))
-    (setf (lsp--client-major-modes (gethash 'ltex-ls lsp-clients))
-          '(plain-tex-mode latex-mode org-mode))
-    (clear-lsp-major-modes 'digestif)
-    (clear-lsp-major-modes 'texlab)))
-
-(require 'fd-thesis)
+; (require 'fd-thesis)
 (use-package org-roam
-  :straight (org-roam
-             :type git :flavor melpa
-             :host github :repo "org-roam/org-roam"
-             :fork (:host github :repo "fakedrake/org-mode"
-                          :branch "master"))
+  ;; :straight (org-roam
+  ;;            :type git :flavor melpa
+  ;;            :host github :repo "org-roam/org-roam"
+  ;;            :fork (:host github :repo "fakedrake/org-mode"
+  ;;                         :branch "master"))
   :init
   (setq org-roam-v2-ack t)
   :custom ((org-roam-directory org-nodes-directory)

@@ -13,7 +13,6 @@
       (delete-region (point-min) (point)))))
 
 (use-package racket-mode
-  :straight (racket-mode :type git :repo "greghendershott/racket-mode" :branch "rebased-multi-back-end")
   :bind (:map racket-mode-map
          ("C-c C-k" . racket-racket-clear-repl)
          :map racket-repl-mode-map

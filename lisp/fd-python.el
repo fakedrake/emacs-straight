@@ -60,27 +60,62 @@
         (indent-relative))
     (funcall pyfun)))
 
-;; company-jedi wires up jedi to be a backend for the auto completion
-;; library, company-mode. DO NOT USE JEDI SEPARATELY
-(use-package company-jedi
-  :hook ((python-mode . (lambda () (add-to-list 'company-backends 'company-jedi))))
-  :custom
-  (jedi:complete-on-dot t)
-  (jedi:use-shortcuts t))
 
-(use-package python
-  :mode (("\\.py\\'" . python-mode) ("Sconscript" . python-mode))
-  :interpreter ("python" . python-mode)
-  :bind (:map python-mode-map
-              ("M-." . jedi:goto-definition)
-              ("M-," . jedi:goto-definition-pop-marker)
-              ("M-q" . 'python-smart-fill-paragraph))
-  :custom
-  ((python-environment-virtualenv '("python3" "-m" "venv"))
-   (paragraph-start (concat paragraph-start "\\|\\s-*\"\"\".*$")))
-  :hook (python-mode . jedi:setup)
+;; Required to easily switch virtual envs
+;; via the menu bar or with `pyvenv-workon`
+;; Setting the `WORKON_HOME` environment variable points
+;; at where the envs are located. I use miniconda.
+(use-package pyvenv
+  :ensure t
+  :defer t
   :config
-  (advice-add 'python-indent-line-function
-              :around #'fd-python-indent-line-function))
+  ;; Setting work on to easily switch between environments
+  (setenv "WORKON_HOME" (expand-file-name "~/miniconda3/envs/"))
+  ;; Display virtual envs in the menu bar
+  (setq pyvenv-menu t)
+  ;; Restart the python process when switching environments
+  (add-hook 'pyvenv-post-activate-hooks
+            (lambda () (pyvenv-restart-python))))
+
+
+;; Built-in Python utilities
+(use-package python
+  :ensure t
+  :config
+  ;; Remove guess indent python message
+  (setq python-indent-guess-indent-offset-verbose nil)
+  ;; Use IPython when available or fall back to regular Python
+  (cond
+   ((executable-find "ipython")
+    (progn
+      (setq python-shell-buffer-name "IPython")
+      (setq python-shell-interpreter "ipython")
+      (setq python-shell-interpreter-args "-i --simple-prompt")))
+   ((executable-find "python3")
+    (setq python-shell-interpreter "python3"))
+   ((executable-find "python2")
+    (setq python-shell-interpreter "python2"))
+   (t
+    (setq python-shell-interpreter "python"))))
+
+(use-package eglot
+  :ensure t)
+
+(defun fd-python-eglot-enable ()
+  "set variables and hook for eglot python IDE"
+  (interactive)
+  (setq company-backends
+        (cons 'company-capf
+              (remove 'company-capf company-backends)))
+  (add-to-list 'eglot-server-programs `(python-mode "pylsp"))
+  (add-hook 'python-mode-hook 'eglot-ensure))
+
+(defun fd-python-eglot-disable ()
+  "remove hook for eglot python"
+  (interactive)
+  (remove-hook 'python-mode-hook 'eglot-ensure))
+
+(use-package cython-mode
+  :ensure t)
 
 ;;; fd-python.el ends here

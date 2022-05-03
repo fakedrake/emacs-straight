@@ -1,9 +1,19 @@
 ;; Colorize issues with the writing in the buffer.
-(use-package writegood-mode
-  :bind ("C-c g" . writegood-mode)
-  :config
-  (add-to-list 'writegood-weasel-words "actionable"))
+;; (use-package writegood-mode
+;;   :bind ("C-c g" . writegood-mode)
+;;   :config
+;;   (add-to-list 'writegood-weasel-words "actionable"))
 
+
+
+(use-package pdf-tools
+  :ensure t
+  :init (add-to-list 'exec-path (straight--build-dir "pdf-tools"))
+  :config
+  (pdf-tools-install)
+  (setq pdf-misc-print-programm "/usr/bin/lpr"
+        pdf-misc-print-programm-args (quote ("-o media=A4" "-o fitplot -o sides=two-sided-long-edge")))
+  (setq pdf-view-use-scaling t))
 
 (defun fd-tex-hook ()
   ;; REMEMBER TO SET TeX-master in .dir-locals.el so that the latex
@@ -32,14 +42,13 @@
 (use-package lua-mode)
 
 (use-package reftex
-  :ensure
+  :ensure t
   :init
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t)
   (setq reftex-bibpath-environment-variables '("./" "./bib/" "./ref" "./reference"))
   ;(setq reftex-default-bibliography '("~/Documents/research_papers/bibtex.bib"))
   (setq reftex-bibliography-commands '("bibliography" "nobibliography" "addbibresource")))
-
 
 (use-package latex
   :ensure t
@@ -55,11 +64,11 @@
   (push '("build.sh" "./build.sh" TeX-run-TeX nil t :help "Run a build script")
         TeX-command-list)
 
-  ;; Use pdf-tools to open PDF files
+  ; Use pdf-tools to open PDF files
   (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
         TeX-source-correlate-start-server t)
 
-  ;; Update PDF buffers after successful LaTeX runs
+  ; Update PDF buffers after successful LaTeX runs
   (add-hook 'TeX-after-compilation-finished-functions
             #'TeX-revert-document-buffer)
 
@@ -70,17 +79,9 @@
   (add-hook 'TeX-mode-hook 'fd-tex-hook)
 
   (setq TeX-complete-expert-commands t)
-  (add-hook 'LaTeX-mode-hook 'reftex-mode)
   (setq preview-auto-reveal t)
   (message "Setup of latex done"))
 
 (use-package company-auctex
   :ensure t
   :hook (TeX-mode . company-auctex-init))
-
-(use-package pdf-tools
-  :config
-  (pdf-tools-install)
-  (setq pdf-misc-print-programm "/usr/bin/lpr"
-        pdf-misc-print-programm-args (quote ("-o media=A4" "-o fitplot -o sides=two-sided-long-edge")))
-  (setq pdf-view-use-scaling t))

@@ -108,5 +108,5 @@ at least one .cpp file in the same directory."
   (modern-c++-font-lock-global-mode t))
 
 
-(use-package realgud-lldb)
+; (use-package realgud-lldb)
 (provide 'fd-cc-mode)

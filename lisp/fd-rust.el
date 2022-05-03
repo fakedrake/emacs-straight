@@ -102,5 +102,3 @@ for it. Similar to `start-process-shell-command', but calls
   (lsp-ui-peek-always-show t)
   (lsp-ui-sideline-show-hover t)
   (lsp-ui-doc-enable nil))
-
-(use-package rustfmt)

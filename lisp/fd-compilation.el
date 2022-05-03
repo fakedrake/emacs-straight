@@ -2,7 +2,7 @@
 ;; Stuff related to compilation.
 (require 's)
 (require 'notifications)
-(require 'cl)
+(require 'cl-lib)
 
 (defmacro with-function-args (func-and-args &rest body)
   "FUNC-AND-ARGS is a cons of function symbol and a function that

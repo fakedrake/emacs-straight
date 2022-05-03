@@ -22,5 +22,5 @@
 
 (use-package sly
   :config
-  (setq inferior-lisp-program "sbcl"))
+  (setq inferior-lisp-program "ros run -Q"))
 (use-package racket-mode)

@@ -260,8 +260,6 @@ parent."
          (t (indent-line-to offset)))
         (forward-line)))))
 
-(use-package dired-hacks)
-
 (setq print-length nil
       print-level nil)
 

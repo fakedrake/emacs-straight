@@ -140,11 +140,17 @@ also `LaTeX-find-matching-begin' and `LaTeX-find-matching-end'."
             (delete-char min-indent))
           (forward-line))))))
 
+(defun mk-column-at (point)
+  "Return column number at POINT."
+  (save-excursion
+    (goto-char point)
+    (current-column)))
+
 (defun LaTeX-edit-code--indent-string (str)
   "Indent a string 2 spaces deeper than the the innermost environment"
   (let ((off (+ 2 (save-excursion
                     (LaTeX-find-matching-begin)
-                    (column-at (point))))))
+                    (mk-column-at (point))))))
     (concat (mapconcat (lambda (x) (concat (s-repeat off " ") x))
                        (s-lines str)
                        "\n"))))

@@ -63,14 +63,12 @@
 
 (init-require 'fd-misc)
 (init-require 'fd-misc-programming)
+(init-require 'fd-yasnippet)
 (use-package yaml-mode)
 (init-require 'fd-clipboard)
 (when (eq system-type 'darwin) (init-require 'fd-macosx))
 (init-require 'fd-grep)
-; (require 'fd-helm)
 (init-require 'fd-ivy)
-; (require 'fd-selectrum)
-
 
 ;; Programming modes
 (init-require 'fd-lsp) ; must be before all programming stuff
@@ -79,15 +77,15 @@
 ; (init-require 'fd-haskell-internal)
 (init-require 'fd-nix)
 (init-require 'fd-flycheck)
-(init-require 'fd-fluidb)
-(init-require 'fd-rust)
+; (init-require 'fd-fluidb)
+; (init-require 'fd-rust)
+(init-require 'fd-rust-eglot)
 (init-require 'fd-tags)
 (init-require 'fd-documents)
 (init-require 'fd-org)
 
 (init-require 'fd-cc-mode)
 (init-require 'fd-lisp)
-; (init-require 'fd-coq)
 (init-require 'fd-company)
 (init-require 'fd-git)
 ; (init-require 'fd-factor)

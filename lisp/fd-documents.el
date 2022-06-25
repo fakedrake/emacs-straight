@@ -1,23 +1,5 @@
-;; Colorize issues with the writing in the buffer.
-;; (use-package writegood-mode
-;;   :bind ("C-c g" . writegood-mode)
-;;   :config
-;;   (add-to-list 'writegood-weasel-words "actionable"))
+(require 'cl-lib)
 
-<<<<<<< HEAD
-=======
-
-
-(use-package pdf-tools
-  :ensure t
-  :init (add-to-list 'exec-path (straight--build-dir "pdf-tools"))
-  :config
-  (pdf-tools-install)
-  (setq pdf-misc-print-programm "/usr/bin/lpr"
-        pdf-misc-print-programm-args (quote ("-o media=A4" "-o fitplot -o sides=two-sided-long-edge")))
-  (setq pdf-view-use-scaling t))
-
->>>>>>> github/master
 (defun fd-tex-hook ()
   ;; REMEMBER TO SET TeX-master in .dir-locals.el so that the latex
   ;; commands will work properly.
@@ -28,7 +10,7 @@
   (add-to-list 'TeX-tree-roots (expand-file-name (project-root (project-current t))))
   (TeX-source-correlate-mode 1)
   ;; Inline code
-  (loop
+  (cl-loop
    for lang in '("code" "hask" "sql" "cpp" "py")
    do
    (font-latex-add-keywords `((,lang "{")) 'italic-command)
@@ -88,7 +70,6 @@
 (use-package company-auctex
   :ensure t
   :hook (TeX-mode . company-auctex-init))
-<<<<<<< HEAD
 
 (unless (eq system-type 'windows-nt)
   (use-package pdf-tools
@@ -97,5 +78,3 @@
     (setq pdf-misc-print-programm "/usr/bin/lpr"
           pdf-misc-print-programm-args (quote ("-o media=A4" "-o fitplot -o sides=two-sided-long-edge")))
     (setq pdf-view-use-scaling t)))
-=======
->>>>>>> github/master

@@ -8,11 +8,13 @@
                      gc-cons-threshold)))
 
 ;; Set the CNTLM proxy
-(require 'cl)
+(require 'cl-lib)
 (defun setup-cntlm-proxy--internal (set-or-unset)
   (cl-flet ((s (v) (when set-or-unset v)))
     (setenv "HTTPS_PROXY" (s "http://127.0.0.1:3128"))
     (setenv "HTTP_PROXY" (s "http://127.0.0.1:3128"))
+    (setenv "https_proxy" (s "http://127.0.0.1:3128"))
+    (setenv "http_proxy" (s "http://127.0.0.1:3128"))
     (setq url-proxy-services
 	  (s '(("http"     . "127.0.0.1:3128")
 	       ("https"     . "127.0.0.1:3128")
@@ -20,7 +22,8 @@
 (defun enable-cntlm-proxy () (interactive) (setup-cntlm-proxy--internal t))
 (defun disable-cntlm-proxy () (interactive) (setup-cntlm-proxy--internal nil))
 
-(enable-cntlm-proxy)
+; (enable-cntlm-proxy)
+(disable-cntlm-proxy)
 
 
 (when (eq system-type 'windows-nt)
@@ -78,8 +81,7 @@
 (init-require 'fd-nix)
 (init-require 'fd-flycheck)
 ; (init-require 'fd-fluidb)
-; (init-require 'fd-rust)
-(init-require 'fd-rust-eglot)
+(init-require 'fd-rust)
 (init-require 'fd-tags)
 (init-require 'fd-documents)
 (init-require 'fd-org)
@@ -99,6 +101,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("86014f0f5b78a610977acc74f127b56c7f0506a5973d872d11752879855d401e" "1b43d37da6d8935d26e55f15d3af672b14e6a25f8c891c40efe19255c41264da" "5a343f93cded62690a8167421249b7ceea1cca89224ad3550e85006305344ca0" "34235be96d680dee818d58371286aed3c13441f287156bb03f302c46637bcfca" "00eae1b4c390947bf53ee1dca98c6bb9b6fb5f4bc87cfc1b226b6258826b9aa6" "f58f766170b04a1c73d4cf152eac9bb6e317ceb6f5a2f92dcc3e300c9e28eb8f" "55a1a4c438a0517d916959a8a177af489417fa1d0db76fe1149261ced31437f8" "3bddc745807c3eb8f2bebda5edeb3186f67c669a0d9ae401f9fda900814dd8e1" "f695610f81acabf7455a76187ed5e66c4b67a73b76a0c2208bac61e6667c086a" "58115a5caf2c19aa48de6562c70dfaec47b429707389e03ef59f22f6f6be65ab" "e1d6039990206eb201dbe9a08246cede66e28bab7c0a85fbedfe3714cb3daf8f" "0f0e3de6e1599045abbd5e56a5d1ca686900fd564d27866b1269617c199559f0" "b616b5b7a808c4d46a90549bca2f4dcb5bff4f0e04ddaece5611b186f7e9de53" "1f96167d9def2e56d201a4fe5c70a3081f44e43e257ca0003d0373d0294e2e84" default))
  '(safe-local-variable-values
    '((compile-root . "/plink:semedi-ts-03:/home/christosp/Projects/gmdbv5/")))
  '(warning-suppress-types '((jedi))))

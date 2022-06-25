@@ -1,4 +1,5 @@
-(delete-if (lambda (x) (equal "plinkh" (car x))) tramp-methods)
+(require 'cl-lib)
+(cl-delete-if (lambda (x) (equal "plinkh" (car x))) tramp-methods)
 (add-to-list 'tramp-methods
              `("plinkh"
                (tramp-login-program        "plink")
@@ -16,7 +17,3 @@
 
 (remove-hook 'tramp-cleanup-connection-hook #'tramp-recentf-cleanup)
 (remove-hook 'tramp-cleanup-all-connection-hook #'tramp-recentf-cleanup-all)
-
-(use-package request)
-(use-package google-translate
-  :bind (("C-c t" . google-translate-smooth-translate)))

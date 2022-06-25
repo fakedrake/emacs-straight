@@ -1,6 +1,7 @@
 ;; CLIPBOARD
 (require 'simple)
-(setq interprogram-paste-function 'x-cut-buffer-or-selection-value
+(setq interprogram-paste-function 'gui-selection-value
+      interprogram-cut-function 'gui-select-text
       select-enable-clipboard t
       x-select-enable-clipboard t)
 

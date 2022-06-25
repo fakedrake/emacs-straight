@@ -1,4 +1,4 @@
-(setq org-nodes-directory (expand-file-name "~/RoamNotes"))
+(setq org-nodes-directory "/mnt/c/Users/c00654728/AppData/Roaming/RoamNotes/")
 
 (defun org-count-words (start end)
   "Count words in region skipping code blocks"

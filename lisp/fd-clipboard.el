@@ -5,6 +5,20 @@
       select-enable-clipboard t
       x-select-enable-clipboard t)
 
+
+(when (getenv "WAYLAND_DISPLAY")
+  (setq
+   interprogram-cut-function
+   (lambda (text)
+     ;; strangest thing: gui-select-text leads to gui-set-selection
+     ;; 'CLIPBOARD text -- if I eval that with some string, it mostly
+     ;; lands on the wayland clipboard, but not when it's invoked from
+     ;; this context.  (gui-set-selection 'CLIPBOARD text) without the
+     ;; charset=utf-8 in type, emacs / wl-copy will crash when you
+     ;; paste emojis into a windows app
+     (start-process "wl-copy" nil "wl-copy" "--trim-newline" "--type" "text/plain;charset=utf-8"  text))))
+
+
 (defun clipboard-contents-normal (filename is-directory line-info)
   (let ((linum-sep (if github-prefix "#L" ":"))
 	(uri (if github-prefix

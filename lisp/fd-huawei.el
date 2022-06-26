@@ -34,6 +34,15 @@
         (match-beginning 0)
       (point-max))))
 
+(defun fix-routes ()
+  "Runs a powershell command that removes the routes that divert
+packets from WSL2."
+  (start-file-process
+   "fix-routes-powershell"
+   "*fix-routes-powershell*"
+   "powershell.exe"
+   "Get-NetIPAddress -InterfaceAlias \"vEthernet (WSL)\" | ForEach-Object { Get-NetRoute -DestinationPrefix \"$($_.IPAddress -replace '\.\d+$', \".0\")/20\" | Where-Object -Property ifIndex -Value $_.ifIndex  -NE } | Remove-NetRoute"))
+
 (defun insert-toml-tag ()
   (goto-char (point-max))
   (insert tag)
@@ -107,8 +116,9 @@ QLU0ewUmUHQsV5mk62v1e8sRViHBlB2HJ3DU5gE=
 -----END CERTIFICATE-----
 ")
 
-(defun set-certificate ()
+(defun set-huawei-certificate ()
   "Set the certificate in hproxy"
+  (interactive)
   (with-current-buffer (find-file-noselect "/sudo::/usr/local/share/ca-certificates/huawei.crt")
     (insert huawei-certificate)
     (save-buffer)
@@ -124,6 +134,7 @@ aren't as many options."
       (set-environmet-proxy http-url)
       (set-cargo-proxy http-url)
       (set-git-proxy prx)
+      (s (fix-routes))
       (setq url-proxy-services
 	    (s `(("http"     . ,prx)
 	         ("https"    . ,prx)

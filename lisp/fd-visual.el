@@ -104,6 +104,7 @@
   (doom-themes-treemacs-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (global-hl-line-mode 1)
+  (set-face-font 'default "Fira Code")
   (doom-themes-org-config))
 
 ;; (use-package naquadah-theme

@@ -46,8 +46,6 @@
 
 ;;; Code:
 
-(require 'lua-mode)
-
 (defgroup LaTeX-code nil
   "Code support in AUCTeX."
   :group 'LaTeX)

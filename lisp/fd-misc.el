@@ -180,7 +180,10 @@ parent."
 ;; PATH in emacs
 (defun set-exec-path-from-shell-PATH ()
   (interactive)
-  (let ((path-from-shell (car (reverse (split-string (shell-command-to-string "echo -n $PATH") ":")))))
+  (when (eq system-type 'windows-nt)
+    (error "set-exec-path-from-shell-PATH only works for unix."))
+  (let ((path-from-shell
+         (car (reverse (split-string (shell-command-to-string "echo -n $PATH") ":")))))
     (setenv "PATH" path-from-shell)
     (setenv "EDITOR" "emacsclient")
     (setenv "EMACS" (s-trim (shell-command-to-string "echo $EMACS")))
@@ -222,7 +225,9 @@ parent."
 (electric-indent-mode -1)
 (savehist-mode 1)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-(setenv "PATH" (shell-command-to-string "echo -n $PATH"))
+(unless (eq 'windows-nt system-type)
+  (setenv "PATH" (shell-command-to-string "echo -n $PATH")))
+
 (setq reb-re-syntax 'rx)
 
 (rx-define path-base () (+ (in word ?_ ?- ?.)))

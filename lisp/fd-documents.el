@@ -89,3 +89,11 @@
 (use-package company-auctex
   :ensure t
   :hook (TeX-mode . company-auctex-init))
+
+(unless (eq system-type 'windows-nt)
+  (use-package pdf-tools
+    :config
+    (pdf-tools-install)
+    (setq pdf-misc-print-programm "/usr/bin/lpr"
+          pdf-misc-print-programm-args (quote ("-o media=A4" "-o fitplot -o sides=two-sided-long-edge")))
+    (setq pdf-view-use-scaling t)))

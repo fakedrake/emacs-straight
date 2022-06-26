@@ -1,5 +1,34 @@
 (setq org-nodes-directory "/mnt/c/Users/c00654728/AppData/Roaming/RoamNotes/")
 
+(use-package org-roam
+  ;; :straight (org-roam
+  ;;            :type git :flavor melpa
+  ;;            :host github :repo "org-roam/org-roam"
+  ;;            :fork (:host github :repo "fakedrake/org-roam"
+  ;;                         :branch "master"))
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom ((org-roam-directory org-nodes-directory)
+           (org-return-follows-link t)
+           (org-roam-completion-everywhere t))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-x [" . org-roam-visit-parent-node))
+  :bind-keymap ("C-c n d" . org-roam-dailies-map)
+  :config
+  (when (eq system-type 'windows-nt) '(rg))
+  (require 'org-roam)
+  (require 'org-roam-dailies) ;; Ensure the keymap is available
+  (setq org-roam-file-exclude-regexp nil) ; Used to be "data/" but
+                                          ; there is an "/appdata"
+                                          ; dir.
+  (org-roam-db-autosync-mode)
+  (org-roam-setup)
+  'done)
+
 (defun org-count-words (start end)
   "Count words in region skipping code blocks"
   (let ((words 0))
@@ -71,7 +100,8 @@ mode-line.")
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
-  :bind (:map org-mode-map
+  :bind (("C-c l" . org-store-link)
+         :map org-mode-map
               ("<C-tab>" . yas-expand)
               ("M-j" . 'org-meta-return)
               ("C-c C-j" . 'org-meta-return)
@@ -81,42 +111,42 @@ mode-line.")
   :custom ((org-image-actual-width 500))
   :hook ((org-mode . fd-org-mode-hook))
   :config
-  (setq org-latex-compiler "lualatex"
-        org-latex-pdf-process
-        '("latexmk -shell-escape -bibtex -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f")
-        org-cite-global-bibliography
-        (list (concat org-nodes-directory "/bibtex.bib"))
-        org-cite-export-processors '((t . (fd-natbib "unsrt" nil))))
+  ;; (setq org-latex-compiler "lualatex"
+  ;;       org-latex-pdf-process
+  ;;       '("latexmk -shell-escape -bibtex -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f")
+  ;;       org-cite-global-bibliography
+  ;;       (list (concat org-nodes-directory "/bibtex.bib"))
+  ;;       org-cite-export-processors '((t . (fd-natbib "unsrt" nil))))
 
   ;; Define fd-natbib that automatically adds the natbib bibliography
   ;; at the end of the document.
-  (require 'oc)
-  (require 'oc-natbib)
-  (let ((natbib (org-cite--get-processor 'natbib)))
-    (org-cite-register-processor 'fd-natbib
-      :export-bibliography (org-cite-processor-export-bibliography natbib)
-      :export-citation (org-cite-processor-export-citation natbib)
-      :export-finalizer #'fd-natbib-cite-processor-finalize
-      :cite-styles (org-cite-processor-cite-styles natbib)))
-  (org-wc-mode 1)
+  ;; (require 'oc)
+  ;; (require 'oc-natbib)
+  ;; (let ((natbib (org-cite--get-processor 'natbib)))
+  ;;   (org-cite-register-processor 'fd-natbib
+  ;;     :export-bibliography (org-cite-processor-export-bibliography natbib)
+  ;;     :export-citation (org-cite-processor-export-citation natbib)
+  ;;     :export-finalizer #'fd-natbib-cite-processor-finalize
+  ;;     :cite-styles (org-cite-processor-cite-styles natbib)))
+  ;; (org-wc-mode 1)
   (yas-minor-mode 1)
   (add-to-list 'org-file-apps '("\\.pdf\\'" . emacs)))
 
 
-(defun fd-natbib-cite-processor-finalize (output citation-keys bib-files bib-style back-end info)
-  (let* ((natbib (org-cite--get-processor 'natbib))
-         (out (funcall (org-cite-processor-export-finalizer natbib)
-                       output citation-keys bib-files bib-style back-end info)))
-    (with-temp-buffer
-      (save-match-data
-        (save-excursion (insert out))
-        (unless (save-excursion (re-search-forward "^[[:space:]]*\\bibliograpy" nil  t))
-          (when (search-forward "\\end{document}" nil t)
-            (let ((bib-str (funcall (org-cite-processor-export-bibliography natbib)
-                                    citation-keys bib-files bib-style nil back-end info)))
-              (goto-char (match-beginning 0))
-              (insert bib-str))))
-        (buffer-string)))))
+;; (defun fd-natbib-cite-processor-finalize (output citation-keys bib-files bib-style back-end info)
+;;   (let* ((natbib (org-cite--get-processor 'natbib))
+;;          (out (funcall (org-cite-processor-export-finalizer natbib)
+;;                        output citation-keys bib-files bib-style back-end info)))
+;;     (with-temp-buffer
+;;       (save-match-data
+;;         (save-excursion (insert out))
+;;         (unless (save-excursion (re-search-forward "^[[:space:]]*\\bibliograpy" nil  t))
+;;           (when (search-forward "\\end{document}" nil t)
+;;             (let ((bib-str (funcall (org-cite-processor-export-bibliography natbib)
+;;                                     citation-keys bib-files bib-style nil back-end info)))
+;;               (goto-char (match-beginning 0))
+;;               (insert bib-str))))
+;;         (buffer-string)))))
 
 
 (use-package org-ref

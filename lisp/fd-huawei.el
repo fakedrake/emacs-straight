@@ -19,6 +19,20 @@
 (remove-hook 'tramp-cleanup-all-connection-hook #'tramp-recentf-cleanup-all)
 
 
+(defun set-apt-proxy (proxy-url)
+  "If proxy-url is nil remove the proxy configuration
+file. Otherwise it is expected to be a string."
+  (let ((proxy-conf (format
+                     "Acquire::http::Proxy \"%s\";\nAcquire::https::Proxy \"%s\";\n"
+                     proxy-url proxy-url))
+        (fname "/sudo::/etc/apt/apt.conf.d/99-proxy"))
+    (if proxy-url
+        (with-current-buffer (find-file-noselect fname)
+          (delete-region (point-min) (point-max))
+          (insert proxy-conf)
+          (save-buffer))
+      (delete-file fname))))
+
 (defun cntlm-host-ip ()
   (when (file-exists-p "/etc/resolv.conf")
     (with-temp-buffer
@@ -34,6 +48,7 @@
         (match-beginning 0)
       (point-max))))
 
+;  Get-NetIPAddress  -InterfaceAlias "vEthernet (WSL)" | ForEach-Object { Get-NetRoute -DestinationPrefix "$($_.IPAddress -replace '\.\d+$', ".0")/20" | Where-Object -Property ifIndex -Value $_.ifIndex  -NE } | Remove-NetRoute
 (defun fix-routes ()
   "Runs a powershell command that removes the routes that divert
 packets from WSL2."
@@ -41,7 +56,7 @@ packets from WSL2."
    "fix-routes-powershell"
    "*fix-routes-powershell*"
    "powershell.exe"
-   "Get-NetIPAddress -InterfaceAlias \"vEthernet (WSL)\" | ForEach-Object { Get-NetRoute -DestinationPrefix \"$($_.IPAddress -replace '\.\d+$', \".0\")/20\" | Where-Object -Property ifIndex -Value $_.ifIndex  -NE } | Remove-NetRoute"))
+   "Get-NetIPAddress -InterfaceAlias \"vEthernet (WSL)\" | ForEach-Object { Get-NetRoute -DestinationPrefix \"$($_.IPAddress -replace '\\.\\d+$', \".0\")/20\" | Where-Object -Property ifIndex -Value $_.ifIndex  -NE } | Remove-NetRoute"))
 
 (defun insert-toml-tag ()
   (goto-char (point-max))
@@ -128,13 +143,14 @@ QLU0ewUmUHQsV5mk62v1e8sRViHBlB2HJ3DU5gE=
   "This is similar to hproxy but you can set/unset it and there
 aren't as many options."
   (cl-flet ((s (v) (when set-or-unset v)))
-    (let* ((host-url (or (cntlm-host-ip) "127.0.0.1"))
+    (let* ((host-url (s (or (cntlm-host-ip) "127.0.0.1")))
            (prx (s (format "%s:3128" host-url)))
            (http-url (s (format "http://%s" prx))))
-      (set-environmet-proxy http-url)
+      (set-envionment-proxy http-url)
       (set-cargo-proxy http-url)
+      (set-apt-proxy http-url)
       (set-git-proxy prx)
-      (s (fix-routes))
+      (when set-or-unset (fix-routes))
       (setq url-proxy-services
 	    (s `(("http"     . ,prx)
 	         ("https"    . ,prx)

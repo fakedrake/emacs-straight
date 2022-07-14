@@ -1,5 +1,6 @@
 (setq flymake-list-only-diagnostics ())
 
+(add-to-list 'exec-path (expand-file-name "~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/"))
                                         ; (use-package eglot)
 
 (use-package yasnippet

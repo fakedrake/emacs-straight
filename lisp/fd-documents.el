@@ -8,7 +8,9 @@
 
 (use-package pdf-tools
   :ensure t
-  :init (add-to-list 'exec-path (straight--build-dir "pdf-tools"))
+  :init
+  (add-to-list 'exec-path (straight--build-dir "pdf-tools"))
+  (setq pdf-info-epdfinfo-program (or (executable-find "epdfinfo") pdf-info-epdfinfo-program))
   :config
   (pdf-tools-install)
   (setq pdf-misc-print-programm "/usr/bin/lpr"
@@ -25,11 +27,12 @@
   (add-to-list 'TeX-tree-roots (expand-file-name (project-root (project-current t))))
   (TeX-source-correlate-mode 1)
   ;; Inline code
-  (loop
+  (cl-loop
    for lang in '("code" "hask" "sql" "cpp" "py")
    do
    (font-latex-add-keywords `((,lang "{")) 'italic-command)
    (font-latex-add-keywords `((,lang "{")) 'variable))
+  (yas-minor-mode 1)
 
   (add-to-list 'LaTeX-verbatim-environments "minted")
   (add-to-list 'LaTeX-verbatim-environments "haskellcode")
@@ -54,6 +57,7 @@
   :ensure t
   :straight auctex
   :config
+  (add-to-list 'auto-mode-alist '("\\.tex$" . LaTeX-mode))
   (setq-default TeX-engine 'luatex)
   (setq TeX-PDF-mode t)
   (require 'fd-auctex-code)
@@ -85,3 +89,11 @@
 (use-package company-auctex
   :ensure t
   :hook (TeX-mode . company-auctex-init))
+
+(unless (eq system-type 'windows-nt)
+  (use-package pdf-tools
+    :config
+    (pdf-tools-install)
+    (setq pdf-misc-print-programm "/usr/bin/lpr"
+          pdf-misc-print-programm-args (quote ("-o media=A4" "-o fitplot -o sides=two-sided-long-edge")))
+    (setq pdf-view-use-scaling t)))

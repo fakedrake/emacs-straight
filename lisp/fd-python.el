@@ -118,4 +118,8 @@
 (use-package cython-mode
   :ensure t)
 
+(defun fd-python-hook ()
+  (jedi:setup)
+  (setq-local indent-tabs-mode nil))
+
 ;;; fd-python.el ends here

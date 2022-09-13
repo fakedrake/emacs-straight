@@ -1,3 +1,4 @@
+
 (defun tags-find-symbol (symbol file-domain)
   (interactive (list
                 (rg-read-pattern 'literal (grep-tag-default)) (rg-read-files)))

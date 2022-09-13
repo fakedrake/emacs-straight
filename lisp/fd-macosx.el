@@ -43,6 +43,7 @@
   (let ((default-directory "~"))
     (shell-command-to-string "pbpaste")))
 
+
 (defun paste-to-osx (text &optional push)
   (let ((process-connection-type nil)
         (lang (getenv "LANG"))

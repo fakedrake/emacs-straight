@@ -67,3 +67,6 @@
 (init-require 'fd-git)
 (init-require 'fd-racket)
 (init-require 'fd-visual)
+
+(load-file (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate")))

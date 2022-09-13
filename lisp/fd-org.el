@@ -184,7 +184,7 @@ mode-line.")
          ("C-x [" . org-roam-visit-parent-node))
   :bind-keymap ("C-c n d" . org-roam-dailies-map)
   :config
-  (setup-article)
+  ; (setup-article)
   (require 'org-roam-dailies) ;; Ensure the keymap is available
   (org-roam-db-autosync-mode)
   (org-roam-setup))

@@ -24,3 +24,4 @@
   :config
   (setq inferior-lisp-program "ros run -Q"))
 (use-package racket-mode)
+(use-package cider)

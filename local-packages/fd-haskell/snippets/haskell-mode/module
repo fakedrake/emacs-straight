@@ -1,0 +1,5 @@
+# name: Create the module header
+# key: module
+# --
+module `(haskell-infer-module-name)` () where
+$0

@@ -71,6 +71,9 @@
 (init-require 'fd-huawei)
 (init-require 'fd-racket)
 (init-require 'fd-visual)
+
+(load-file (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate")))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

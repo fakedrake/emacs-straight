@@ -100,7 +100,7 @@ mode-line.")
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
-  :bind (("C-c l" . org-store-link)
+  :bind (("C-c L" . org-store-link)
          :map org-mode-map
               ("<C-tab>" . yas-expand)
               ("M-j" . 'org-meta-return)

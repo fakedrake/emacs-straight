@@ -10,13 +10,21 @@
   (setq lsp-keymap-prefix "C-c l")
   :hook ((cc-mode . lsp-or-eglot)
          (haskell-mode . lsp-or-eglot)
-         (rust-mode . lsp-or-eglot))
+         (cc-mode . lsp-or-eglot)
+         (c-mode . lsp-or-eglot)
+         (rust-mode . lsp))
   :config
+
   (require 'lsp-mode)
   (setq lsp-enable-folding nil)
   (setq lsp-enable-snippet nil)
   ; (setq lsp-ui-doc-enable nil)
   (setq lsp-lens-enable nil))
+
+
+
+(use-package lsp-treemacs
+  :config (require 'lsp-treemacs))
 
 (use-package all-the-icons)
 

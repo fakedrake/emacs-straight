@@ -82,30 +82,11 @@ at least one .cpp file in the same directory."
                (file-remote-p (buffer-file-name (current-buffer))))
     (flycheck-mode 1)))
 
-(use-package flycheck
-  :config
-  (setq flycheck-clang-language-standard "c++2a")
-  (add-hook 'c++-mode-hook 'flycheck-no-remote)
-  (add-hook 'c-mode-hook 'flycheck-no-remote))
-
-;; (use-package ggtags
-;;   :hook ((c++-mode-hook . ggtags-mode))
+;; (use-package flycheck
 ;;   :config
-;;   (define-key ggtags-navigation-map "\M->" nil)
-;;   (define-key ggtags-navigation-map "\M-<" nil)
-;;   (setq ggtags-highlight-tag nil)
-;;   (add-hook 'c++-mode-hook 'ggtags-mode)
-;;   (add-hook 'c-mode-hook 'ggtags-mode))
-
-(use-package counsel-gtags
-  :hook ((c-mode-common . counsel-gtags-mode))
-  :bind (:map
-         counsel-gtags-mode-map
-         ("M-." . counsel-gtags-dwim)
-         ;; Remember that ivy-occur (C-c C-o) will create an
-         ;; occur-like buffer of the completions.
-         ("M-?" . counsel-gtags-find-reference)
-         ("M-," . counsel-gtags-go-backward)))
+;;   (setq flycheck-clang-language-standard "c++2a")
+;;   (add-hook 'c++-mode-hook 'flycheck-no-remote)
+;;   (add-hook 'c-mode-hook 'flycheck-no-remote))
 
 (use-package modern-cpp-font-lock
   :config

@@ -21,6 +21,32 @@
   (setf (alist-get 'counsel-M-x ivy-initial-inputs-alist nil 'remove-item) nil))
 
 
+(defun minibuffer-ivy-fallback ()
+  "Fallback to non ivy version of current command."
+  (interactive)
+  (when (bound-and-true-p ivy-mode)
+    (ivy-mode -1)
+    (add-hook 'minibuffer-setup-hook
+              'minibuffer-ivy-fallback--enable-ivy))
+  (ivy-set-action
+   (lambda (current-path)
+     (let ((old-default-directory default-directory))
+       (when (not (member last-command '(
+                                         dired-create-directory
+                                         dired-do-copy
+                                         dired-do-rename
+                                         )))
+         (let ((i (length current-path)))
+           (while (> i 0)
+             (push (aref current-path (setq i (1- i))) unread-command-events))))
+       (let ((default-directory "")) (call-interactively last-command))
+       (setq default-directory old-default-directory))))
+  (ivy-done))
+(defun minibuffer-ivy-fallback--enable-ivy  ()
+  (remove-hook 'minibuffer-setup-hook
+               'minibuffer-ivy-fallback--enable-ivy )
+  (ivy-mode t))
+
 (use-package amx)
 ;; ;; Better filtering
 ;; (use-package prescient)

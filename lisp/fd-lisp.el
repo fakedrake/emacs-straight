@@ -15,9 +15,12 @@
   (define-key emacs-lisp-mode-map (kbd "C-M-d") 'edebug-defun))
 
 
-(use-package chicken-scheme)
-(use-package geiser-chez)
-(use-package geiser-chicken)
+(use-package chicken-scheme
+  :defer t)
+(use-package geiser-chez
+  :defer t)
+(use-package geiser-chicken
+  :defer t)
 (add-hook 'emacs-lisp-mode-hook 'fd-elisp-hooks)
 
 (use-package sly

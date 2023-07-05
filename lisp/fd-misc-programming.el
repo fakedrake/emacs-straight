@@ -41,3 +41,4 @@ each line."
 (use-package format-all)
 
 (use-package tree-mode)
+(use-package vterm)

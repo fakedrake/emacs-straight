@@ -19,6 +19,7 @@
 (cua-mode -1)
 (setq scroll-step 1)
 (global-set-key (kbd "C-z") 'revert-buffer)
+(global-set-key (kbd "C-x C-z") 'revert-buffer)
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 
@@ -308,3 +309,19 @@ Defaults to the value of `browse-url-galeon-arguments' at the time
                 collect `(browse-url-define-browser ,depr-browser))))
 
 (define-deprecated-browsers)
+
+
+(defun indent-begin-end-tags ()
+  "Indent [begin]/[end] tags"
+  (interactive)
+  (let ((ind 0))
+    (dotimes (i0 1000)
+      (cond ((looking-at "\\[begin\\]")
+             (dotimes (i ind) (insert " "))
+             (setq ind (+ 1 ind)))
+            ((looking-at "\\[end\\]")
+             (setq ind (- ind 1))
+             (dotimes (i ind) (insert " ")))
+            (t (dotimes (i ind) (insert " "))))
+      (forward-line)
+      (beginning-of-line))))

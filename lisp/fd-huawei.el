@@ -1,4 +1,5 @@
 (require 'cl-lib)
+(require 'tramp)
 (cl-delete-if (lambda (x) (equal "plinkh" (car x))) tramp-methods)
 (add-to-list 'tramp-methods
              `("plinkh"
@@ -58,7 +59,7 @@ packets from WSL2."
    "powershell.exe"
    "Get-NetIPAddress -InterfaceAlias \"vEthernet (WSL)\" | ForEach-Object { Get-NetRoute -DestinationPrefix \"$($_.IPAddress -replace '\\.\\d+$', \".0\")/20\" | Where-Object -Property ifIndex -Value $_.ifIndex  -NE } | Remove-NetRoute"))
 
-(defun insert-toml-tag ()
+(defun insert-toml-tag (tag)
   (goto-char (point-max))
   (insert tag)
   (insert "\n")
@@ -94,8 +95,15 @@ packets from WSL2."
       (save-buffer))))
 
 (defun set-git-proxy (prx)
-  (shell-command (format "git config --global http.proxy %s" prx))
-  (shell-command (format "git config --global https.proxy %s" prx)))
+  (dolist (proto '("http" "https"))
+    (unless prx
+      (shell-command (format "git config --global %s.proxy unset-shouldnt-fail"
+                             proto)))
+    (shell-command
+     (format "git config --global %s %s.proxy %s"
+             (if prx "" "--unset")
+             proto
+             (or prx "")))))
 
 (defun set-envionment-proxy (http-url)
   "Set environment variables related to the proxy."
@@ -139,12 +147,16 @@ QLU0ewUmUHQsV5mk62v1e8sRViHBlB2HJ3DU5gE=
     (save-buffer)
     (shell-command "update-ca-certificates")))
 
+(setq huawei-proxy-port 8080
+      huawei-proxy-host "proxyuk.huawei.com")
+
 (defun setup-cntlm-proxy--internal (set-or-unset)
   "This is similar to hproxy but you can set/unset it and there
 aren't as many options."
   (cl-flet ((s (v) (when set-or-unset v)))
-    (let* ((host-url (s (or (cntlm-host-ip) "127.0.0.1")))
-           (prx (s (format "%s:3128" host-url)))
+    (let* ((host-port (or huawei-proxy-port 3128))
+           (host-url (s (or huawei-proxy-host (cntlm-host-ip) "127.0.0.1")))
+           (prx (s (format "%s:%s" host-url host-port)))
            (http-url (s (format "http://%s" prx))))
       (set-envionment-proxy http-url)
       (set-cargo-proxy http-url)
@@ -159,5 +171,5 @@ aren't as many options."
 (defun enable-cntlm-proxy () (interactive) (setup-cntlm-proxy--internal t))
 (defun disable-cntlm-proxy () (interactive) (setup-cntlm-proxy--internal nil))
 
-(enable-cntlm-proxy)
-; (disable-cntlm-proxy)
+; (enable-cntlm-proxy)
+(disable-cntlm-proxy)

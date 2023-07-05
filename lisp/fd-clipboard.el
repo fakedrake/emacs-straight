@@ -1,22 +1,28 @@
-;; CLIPBOARD
 (require 'simple)
+;; CLIPBOARD
 (setq interprogram-paste-function 'gui-selection-value
       interprogram-cut-function 'gui-select-text
       select-enable-clipboard t
       x-select-enable-clipboard t)
 
 
+(defun wayland-cut (text)
+  ;; strangest thing: gui-select-text leads to gui-set-selection
+  ;; 'CLIPBOARD text -- if I eval that with some string, it mostly
+  ;; lands on the wayland clipboard, but not when it's invoked from
+  ;; this context.  (gui-set-selection 'CLIPBOARD text) without the
+  ;; charset=utf-8 in type, emacs / wl-copy will crash when you
+  ;; paste emojis into a windows app
+  (let ((proc (start-process "wl-copy" nil "wl-copy" "--trim-newline" "--type" "text/plain;charset=utf-8")))
+    (process-send-string proc text)
+    ;; It needs two eof for some reason
+    (process-send-eof proc)
+    (process-send-eof proc)))
+
 (when (getenv "WAYLAND_DISPLAY")
   (setq
    interprogram-cut-function
-   (lambda (text)
-     ;; strangest thing: gui-select-text leads to gui-set-selection
-     ;; 'CLIPBOARD text -- if I eval that with some string, it mostly
-     ;; lands on the wayland clipboard, but not when it's invoked from
-     ;; this context.  (gui-set-selection 'CLIPBOARD text) without the
-     ;; charset=utf-8 in type, emacs / wl-copy will crash when you
-     ;; paste emojis into a windows app
-     (start-process "wl-copy" nil "wl-copy" "--trim-newline" "--type" "text/plain;charset=utf-8"  text))))
+   #'wayland-cut))
 
 
 (defun clipboard-contents-normal (filename is-directory line-info)

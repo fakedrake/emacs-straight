@@ -23,6 +23,7 @@
   ; We always have graphicx, luaextra and amsmath even if they are not
   ; in the current file
   (TeX-run-style-hooks "article" "luaextra" "graphics" "amsmath" "minted")
+  (setq TeX-command-extra-options "-shell-escape")
   ;; Set the project root
   (add-to-list 'TeX-tree-roots (expand-file-name (project-root (project-current t))))
   (TeX-source-correlate-mode 1)
